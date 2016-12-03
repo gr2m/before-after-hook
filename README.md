@@ -277,7 +277,7 @@ hook.remove.after(name, afterHookMethod)
     <td>Yes</td>
   </tr>
   <tr>
-    <th align="left"><code>beforeHookMethod</code></th>
+    <th align="left"><code>afterHookMethod</code></th>
     <td>Function</td>
     <td>
       Same function that was previously passed to <code>hook.after()</code>
