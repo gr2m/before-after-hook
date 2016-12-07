@@ -46,6 +46,7 @@ throws an error or returns a rejected promise, `handleGetError` gets called.
 ## API
 
 - [Constructor](#constructor)
+- [hook.api](#hookapi)
 - [hook()](#hook)
 - [hook.before()](#hookbefore)
 - [hook.after()](#hookafter)
@@ -61,12 +62,23 @@ methods below
 var hook = new Hook()
 ```
 
+### hook.api
+
+Use the `api` property to return the public API:
+
+- [hook.before()](#hookbefore)
+- [hook.after()](#hookafter)
+- [hook.remove.before()](#hookbefore)
+- [hook.remove.after()](#hookafter)
+
+That way you don’t need to expose the [hook()](#hook) method to consumers of your library
+
 ### hook()
 
 Invoke before and after hooks. Returns a promise.
 
 ```js
-hook(name, [options,] method)
+hook(nameOrNames, [options,] method)
 ```
 
 <table>
@@ -80,8 +92,8 @@ hook(name, [options,] method)
   </thead>
   <tr>
     <th align="left"><code>name</code></th>
-    <td>String</td>
-    <td>Hook name, for example <code>'save'</code></td>
+    <td>String or Array of Strings</td>
+    <td>Hook name, for example <code>'save'</code>. Or an array of names, see example below.</td>
     <td>Yes</td>
   </tr>
   <tr>
@@ -105,7 +117,7 @@ Rejects with error that is thrown or rejected with by
 2. `method`
 3. Any of the after hooks, whichever rejects / throws first
 
-Example
+Simple Example
 
 ```js
 hook('save', record, function (record) {
@@ -120,6 +132,36 @@ hook.before('save', function addTimestamps (record) {
   } else {
     record.createdAt = now
   }
+})
+```
+
+Example defining multiple hooks at once.
+
+```js
+hook(['add', 'save'], record, function (record) {
+  return store.save(record)
+})
+
+hook.before('add', function addTimestamps (record) {
+  if (!record.type) {
+    throw new Error('type property is required')
+  }
+})
+
+hook.before('save', function addTimestamps (record) {
+  if (!record.type) {
+    throw new Error('type property is required')
+  }
+})
+```
+
+Defining multiple hooks is helpful if you have similar methods for which you want to define separate hooks, but also an additional hook that gets called for all at once. The example above is equal to this:
+
+```js
+hook('add', record, function (record) {
+  return hook('save', record, function (record) {
+    return store.save(record)
+  })
 })
 ```
 
@@ -151,7 +193,8 @@ hook.before(name, method)
     <td>Function</td>
     <td>
       Callback to be executed before <code>method</code>. Called with the hook’s
-      <code>options</code> argument.
+      <code>options</code> argument. Before hooks can mutate the passed options,
+      they will also be passed to the wrapped method as first argument
     </td>
     <td>Yes</td>
   </tr>
