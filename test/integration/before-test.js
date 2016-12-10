@@ -111,7 +111,7 @@ test('hook.before("test", check)', function (group) {
     hook('test', function () { calls.push('check') })
 
     .then(function () {
-      t.deepEqual(calls, ['before1', 'before2', 'check'])
+      t.deepEqual(calls, ['before2', 'before1', 'check'])
       t.end()
     })
 
