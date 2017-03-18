@@ -41,7 +41,7 @@
     "rimraf": "^2.4.4",
     "semantic-release": "^6.3.2",
     "simple-mock": "^0.7.0",
-    "standard": "^8.0.0",
+    "standard": "^9.0.2",
     "tap-min": "^1.0.0",
     "tap-spec": "^4.1.1",
     "tape": "^4.2.2",
