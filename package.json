@@ -39,7 +39,7 @@
     "istanbul-coveralls": "^1.0.3",
     "mkdirp": "^0.5.1",
     "rimraf": "^2.4.4",
-    "semantic-release": "^7.0.1",
+    "semantic-release": "^8.0.0",
     "simple-mock": "^0.8.0",
     "standard": "^10.0.0",
     "tap-min": "^1.0.0",
