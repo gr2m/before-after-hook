@@ -4,8 +4,7 @@
 
 [![Build Status](https://travis-ci.org/gr2m/before-after-hook.svg?branch=master)](https://travis-ci.org/gr2m/before-after-hook)
 [![Coverage Status](https://coveralls.io/repos/gr2m/before-after-hook/badge.svg?branch=master)](https://coveralls.io/r/gr2m/before-after-hook?branch=master)
-[![Dependency Status](https://david-dm.org/gr2m/before-after-hook.svg)](https://david-dm.org/gr2m/before-after-hook)
-[![devDependency Status](https://david-dm.org/gr2m/before-after-hook/dev-status.svg)](https://david-dm.org/gr2m/before-after-hook#info=devDependencies)
+[![Greenkeeper badge](https://badges.greenkeeper.io/gr2m/before-after-hook.svg)](https://greenkeeper.io/)
 
 ## Motivation
 
