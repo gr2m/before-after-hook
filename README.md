@@ -1,5 +1,7 @@
 # before-after-hook
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/gr2m/before-after-hook.svg)](https://greenkeeper.io/)
+
 > wrap methods with before/after hooks
 
 [![Build Status](https://travis-ci.org/gr2m/before-after-hook.svg?branch=master)](https://travis-ci.org/gr2m/before-after-hook)
