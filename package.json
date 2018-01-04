@@ -33,7 +33,7 @@
   "homepage": "https://github.com/gr2m/before-after-hook#readme",
   "dependencies": {},
   "devDependencies": {
-    "browserify": "^14.0.0",
+    "browserify": "^15.0.0",
     "gaze-cli": "^0.2.0",
     "istanbul": "^0.4.0",
     "istanbul-coveralls": "^1.0.3",
