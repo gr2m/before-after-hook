@@ -1,6 +1,8 @@
 require('./constructor-test')
 require('./before-test')
+require('./error-test')
 require('./after-test')
 require('./hook-test')
 require('./remove-before-test')
+require('./remove-error-test')
 require('./remove-after-test')
