@@ -26,6 +26,14 @@ on custom logic provided by the app, like a failed payment.
 required for asynchronous method hooks. It is using promises exclusively and
 does not alter arguments.
 
+## Install
+
+```
+npm install before-after-hook
+```
+
+For download [the latest `before-after-hook.min.js`](https://github.com/gr2m/before-after-hook/releases/latest).
+
 ## Example
 
 ```js
