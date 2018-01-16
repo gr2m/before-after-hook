@@ -1,8 +1,11 @@
 {
   "name": "before-after-hook",
+  "version": "0.0.0-development",
   "description": "wrap methods with before/after hooks",
-  "main": "index.js",
-  "browser": "index.js",
+  "files": [
+    "index.js",
+    "lib"
+  ],
   "scripts": {
     "prebuild": "rimraf dist && mkdirp dist",
     "build": "browserify index.js --standalone=Hook > dist/before-after-hook.js",
@@ -47,5 +50,13 @@
     "tape": "^4.2.2",
     "uglify-js": "^3.0.0"
   },
-  "version": "0.0.0-development"
+  "release": {
+    "publish": [
+      "@semantic-release/npm",
+      {
+        "path": "@semantic-release/github",
+        "assets": ["dist/*.js"]
+      }
+    ]
+  }
 }
