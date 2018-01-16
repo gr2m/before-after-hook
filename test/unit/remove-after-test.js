@@ -16,6 +16,7 @@ test('removeAfter("name", method) with method that cannot be found', function (t
     registry: {
       test: {
         before: [],
+        error: [],
         after: []
       }
     }
