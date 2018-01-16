@@ -17,7 +17,7 @@ hook('get', getData)
   .then(handleData)
   .catch(handleGetError)
 
-// register before/after/error hooks.
+// register before/error/after hooks.
 // The methods can be asynchronous by returning a Promise
 hook.before('get', beforeHook)
 hook.error('get', errorHook)
@@ -355,7 +355,7 @@ hook.remove.before('save', validateRecord)
 Removes error hook for given name. Returns `hook` instance for chaining.
 
 ```js
-hook.remove.error(name, afterHookMethod)
+hook.remove.error(name, errorHookMethod)
 ```
 
 <table>
@@ -374,7 +374,7 @@ hook.remove.error(name, afterHookMethod)
     <td>Yes</td>
   </tr>
   <tr>
-    <th align="left"><code>afterHookMethod</code></th>
+    <th align="left"><code>errorHookMethod</code></th>
     <td>Function</td>
     <td>
       Same function that was previously passed to <code>hook.error()</code>
