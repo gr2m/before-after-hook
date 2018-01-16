@@ -1,7 +1,7 @@
 {
   "name": "before-after-hook",
   "version": "0.0.0-development",
-  "description": "wrap methods with before/after hooks",
+  "description": "asynchronous before/error/after hooks for internal functionality",
   "files": [
     "index.js",
     "lib"
