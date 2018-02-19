@@ -15,12 +15,12 @@ test('hook.error("test", afterCheck)', function (group) {
       throw new Error('oops')
     })
 
-    .then(function () {
-      t.deepEqual(calls, ['method', 'errorHook', 'afterHook'])
-      t.end()
-    })
+      .then(function () {
+        t.deepEqual(calls, ['method', 'errorHook', 'afterHook'])
+        t.end()
+      })
 
-    .catch(t.error)
+      .catch(t.error)
   })
 
   group.test('async order', function (t) {
@@ -37,12 +37,12 @@ test('hook.error("test", afterCheck)', function (group) {
       })
     })
 
-    .then(function () {
-      t.deepEqual(calls, ['method', 'errorHook'])
-      t.end()
-    })
+      .then(function () {
+        t.deepEqual(calls, ['method', 'errorHook'])
+        t.end()
+      })
 
-    .catch(t.error)
+      .catch(t.error)
   })
 
   group.test('can mutate error', function (t) {
@@ -56,14 +56,14 @@ test('hook.error("test", afterCheck)', function (group) {
 
     hook('test', method)
 
-    .then(function () {
-      t.error('must not resolve')
-    })
+      .then(function () {
+        t.error('must not resolve')
+      })
 
-    .catch(function (error) {
-      t.equal(error.message, 'error hook', 'rejects with error message from error hook')
-      t.end()
-    })
+      .catch(function (error) {
+        t.equal(error.message, 'error hook', 'rejects with error message from error hook')
+        t.end()
+      })
   })
 
   group.test('rejected promise', function (t) {
@@ -77,14 +77,14 @@ test('hook.error("test", afterCheck)', function (group) {
 
     hook('test', method)
 
-    .then(function () {
-      t.error('must not resolve')
-    })
+      .then(function () {
+        t.error('must not resolve')
+      })
 
-    .catch(function (error) {
-      t.equal(error.message, 'error hook', 'rejects with error message from error hook')
-      t.end()
-    })
+      .catch(function (error) {
+        t.equal(error.message, 'error hook', 'rejects with error message from error hook')
+        t.end()
+      })
   })
 
   group.test('can catch error', function (t) {
@@ -97,12 +97,12 @@ test('hook.error("test", afterCheck)', function (group) {
 
     hook('test', method)
 
-    .then(function (result) {
-      t.equal(result.ok, true)
-      t.end()
-    })
+      .then(function (result) {
+        t.equal(result.ok, true)
+        t.end()
+      })
 
-    .catch(t.error)
+      .catch(t.error)
   })
 
   group.test('receives options', function (t) {
@@ -116,10 +116,10 @@ test('hook.error("test", afterCheck)', function (group) {
 
     hook('test', {optionFoo: 'bar'}, method)
 
-    .catch(function (error) {
-      t.equal(error.message, 'oops')
-      t.end()
-    })
+      .catch(function (error) {
+        t.equal(error.message, 'oops')
+        t.end()
+      })
   })
 
   group.test('multiple error hooks get executed after method', function (t) {
@@ -132,11 +132,11 @@ test('hook.error("test", afterCheck)', function (group) {
 
     hook('test', method)
 
-    .catch(function (error) {
-      t.equal(errorHandler.callCount, 2)
-      t.equal(error.message, 'oops')
-      t.end()
-    })
+      .catch(function (error) {
+        t.equal(errorHandler.callCount, 2)
+        t.equal(error.message, 'oops')
+        t.end()
+      })
   })
 
   group.end()

@@ -11,10 +11,10 @@ test('hook.remove.before("test", check)', function (t) {
   hook.remove.before('test', beforeCheck)
   hook('test', function () { calls.push('check') })
 
-  .then(function () {
-    t.deepEqual(calls, ['check'])
-    t.end()
-  })
+    .then(function () {
+      t.deepEqual(calls, ['check'])
+      t.end()
+    })
 
-  .catch(t.error)
+    .catch(t.error)
 })

@@ -13,18 +13,18 @@ test('hook(name, options, method)', function (group) {
     hook.after('outer', function () { calls.push('afterOuter') })
     hook(['outer', 'dafuq', 'inner'], function () { calls.push('method') })
 
-    .then(function () {
-      t.deepEqual(calls, [
-        'beforeOuter',
-        'beforeInner',
-        'method',
-        'afterInner',
-        'afterOuter'
-      ])
-      t.end()
-    })
+      .then(function () {
+        t.deepEqual(calls, [
+          'beforeOuter',
+          'beforeInner',
+          'method',
+          'afterInner',
+          'afterOuter'
+        ])
+        t.end()
+      })
 
-    .catch(t.error)
+      .catch(t.error)
   })
 
   group.test('order', function (t) {
@@ -37,18 +37,18 @@ test('hook(name, options, method)', function (group) {
     hook.after('test', function () { calls.push('after test 2') })
     hook('test', function () { calls.push('method') })
 
-    .then(function () {
-      t.deepEqual(calls, [
-        'before test 2',
-        'before test 1',
-        'method',
-        'after test 1',
-        'after test 2'
-      ])
-      t.end()
-    })
+      .then(function () {
+        t.deepEqual(calls, [
+          'before test 2',
+          'before test 1',
+          'method',
+          'after test 1',
+          'after test 2'
+        ])
+        t.end()
+      })
 
-    .catch(t.error)
+      .catch(t.error)
   })
 
   group.end()

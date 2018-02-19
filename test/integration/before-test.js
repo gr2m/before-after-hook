@@ -11,12 +11,12 @@ test('hook.before("test", check)', function (group) {
     hook.before('test', function () { calls.push('before') })
     hook('test', function () { calls.push('check') })
 
-    .then(function () {
-      t.deepEqual(calls, ['before', 'check'])
-      t.end()
-    })
+      .then(function () {
+        t.deepEqual(calls, ['before', 'check'])
+        t.end()
+      })
 
-    .catch(t.error)
+      .catch(t.error)
   })
 
   group.test('async check', function (t) {
@@ -31,12 +31,12 @@ test('hook.before("test", check)', function (group) {
     })
     hook('test', function () { calls.push('check') })
 
-    .then(function () {
-      t.deepEqual(calls, ['before', 'check'])
-      t.end()
-    })
+      .then(function () {
+        t.deepEqual(calls, ['before', 'check'])
+        t.end()
+      })
 
-    .catch(t.error)
+      .catch(t.error)
   })
 
   group.test('throws error', function (t) {
@@ -49,15 +49,15 @@ test('hook.before("test", check)', function (group) {
 
     hook('test', method)
 
-    .then(function () {
-      t.error('must not resolve')
-    })
+      .then(function () {
+        t.error('must not resolve')
+      })
 
-    .catch(function (error) {
-      t.equal(error.message, 'oops', 'rejects with error message from check')
-      t.equal(method.callCount, 0)
-      t.end()
-    })
+      .catch(function (error) {
+        t.equal(error.message, 'oops', 'rejects with error message from check')
+        t.equal(method.callCount, 0)
+        t.end()
+      })
   })
 
   group.test('rejected promise', function (t) {
@@ -70,15 +70,15 @@ test('hook.before("test", check)', function (group) {
 
     hook('test', method)
 
-    .then(function () {
-      t.error('must not resolve')
-    })
+      .then(function () {
+        t.error('must not resolve')
+      })
 
-    .catch(function (error) {
-      t.equal(error.message, 'oops', 'rejects with error message from check')
-      t.equal(method.callCount, 0)
-      t.end()
-    })
+      .catch(function (error) {
+        t.equal(error.message, 'oops', 'rejects with error message from check')
+        t.equal(method.callCount, 0)
+        t.end()
+      })
   })
 
   group.test('options', function (t) {
@@ -98,7 +98,7 @@ test('hook.before("test", check)', function (group) {
       t.end()
     })
 
-    .catch(t.error)
+      .catch(t.error)
   })
 
   group.test('multiple before hooks get executed before method', function (t) {
@@ -110,12 +110,12 @@ test('hook.before("test", check)', function (group) {
 
     hook('test', function () { calls.push('check') })
 
-    .then(function () {
-      t.deepEqual(calls, ['before2', 'before1', 'check'])
-      t.end()
-    })
+      .then(function () {
+        t.deepEqual(calls, ['before2', 'before1', 'check'])
+        t.end()
+      })
 
-    .catch(t.error)
+      .catch(t.error)
   })
 
   group.end()

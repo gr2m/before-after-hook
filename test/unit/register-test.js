@@ -9,12 +9,12 @@ test('register("name", method) with empty registry and thrown error by method', 
     throw new Error('foo')
   })
 
-  .then(t.fail)
+    .then(t.fail)
 
-  .catch(function (error) {
-    t.equal('foo', error.message)
-    t.end()
-  })
+    .catch(function (error) {
+      t.equal('foo', error.message)
+      t.end()
+    })
 })
 
 test('register("name", undefined)', function (t) {

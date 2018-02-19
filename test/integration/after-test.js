@@ -11,12 +11,12 @@ test('hook.after("test", afterCheck)', function (group) {
     hook.after('test', function () { calls.push('after') })
     hook('test', function () { calls.push('afterCheck') })
 
-    .then(function () {
-      t.deepEqual(calls, ['afterCheck', 'after'])
-      t.end()
-    })
+      .then(function () {
+        t.deepEqual(calls, ['afterCheck', 'after'])
+        t.end()
+      })
 
-    .catch(t.error)
+      .catch(t.error)
   })
 
   group.test('async afterCheck', function (t) {
@@ -31,12 +31,12 @@ test('hook.after("test", afterCheck)', function (group) {
     })
     hook('test', function () { calls.push('afterCheck') })
 
-    .then(function () {
-      t.deepEqual(calls, ['afterCheck', 'after'])
-      t.end()
-    })
+      .then(function () {
+        t.deepEqual(calls, ['afterCheck', 'after'])
+        t.end()
+      })
 
-    .catch(t.error)
+      .catch(t.error)
   })
 
   group.test('throws error', function (t) {
@@ -49,14 +49,14 @@ test('hook.after("test", afterCheck)', function (group) {
 
     hook('test', method)
 
-    .then(function () {
-      t.error('must not resolve')
-    })
+      .then(function () {
+        t.error('must not resolve')
+      })
 
-    .catch(function (error) {
-      t.equal(error.message, 'oops', 'rejects with error message from afterCheck')
-      t.end()
-    })
+      .catch(function (error) {
+        t.equal(error.message, 'oops', 'rejects with error message from afterCheck')
+        t.end()
+      })
   })
 
   group.test('rejected promise', function (t) {
@@ -69,14 +69,14 @@ test('hook.after("test", afterCheck)', function (group) {
 
     hook('test', method)
 
-    .then(function () {
-      t.error('must not resolve')
-    })
+      .then(function () {
+        t.error('must not resolve')
+      })
 
-    .catch(function (error) {
-      t.equal(error.message, 'oops', 'rejects with error message from afterCheck')
-      t.end()
-    })
+      .catch(function (error) {
+        t.equal(error.message, 'oops', 'rejects with error message from afterCheck')
+        t.end()
+      })
   })
 
   group.test('result and options', function (t) {
@@ -97,13 +97,13 @@ test('hook.after("test", afterCheck)', function (group) {
       }
     })
 
-    .then(function (result) {
-      t.equal(result.foo, 'newbar')
-      t.equal(result.otherFoo, 'bar')
-      t.end()
-    })
+      .then(function (result) {
+        t.equal(result.foo, 'newbar')
+        t.equal(result.otherFoo, 'bar')
+        t.end()
+      })
 
-    .catch(t.error)
+      .catch(t.error)
   })
 
   group.test('multiple after hooks get executed after method', function (t) {
@@ -115,12 +115,12 @@ test('hook.after("test", afterCheck)', function (group) {
 
     hook('test', function () { calls.push('afterCheck') })
 
-    .then(function () {
-      t.deepEqual(calls, ['afterCheck', 'after1', 'after2'])
-      t.end()
-    })
+      .then(function () {
+        t.deepEqual(calls, ['afterCheck', 'after1', 'after2'])
+        t.end()
+      })
 
-    .catch(t.error)
+      .catch(t.error)
   })
 
   group.end()
