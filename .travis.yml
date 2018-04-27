@@ -3,11 +3,10 @@ cache:
   directories:
     - $HOME/.npm
 node_js:
-  - 9
+  - 10
   - 8
   - 6
   - 4
-  - 10
 
 after_success:
   - npm run test:coverage && npm run test:coverage:upload
