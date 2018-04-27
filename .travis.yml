@@ -7,6 +7,7 @@ node_js:
   - 8
   - 6
   - 4
+  - 10
 
 after_success:
   - npm run test:coverage && npm run test:coverage:upload
