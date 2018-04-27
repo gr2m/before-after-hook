@@ -3,7 +3,7 @@ cache:
   directories:
     - $HOME/.npm
 node_js:
-  - 9
+  - 10
   - 8
   - 6
   - 4
