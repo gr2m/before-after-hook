@@ -55,7 +55,9 @@
       "@semantic-release/npm",
       {
         "path": "@semantic-release/github",
-        "assets": ["dist/*.js"]
+        "assets": [
+          "dist/*.js"
+        ]
       }
     ]
   }

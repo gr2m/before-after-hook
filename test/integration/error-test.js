@@ -92,7 +92,7 @@ test('hook.error("test", afterCheck)', function (group) {
     var method = simple.stub().throwWith(new Error('oops'))
 
     hook.error('test', function () {
-      return {ok: true}
+      return { ok: true }
     })
 
     hook('test', method)
@@ -114,7 +114,7 @@ test('hook.error("test", afterCheck)', function (group) {
       throw error
     })
 
-    hook('test', {optionFoo: 'bar'}, method)
+    hook('test', { optionFoo: 'bar' }, method)
 
       .catch(function (error) {
         t.equal(error.message, 'oops')

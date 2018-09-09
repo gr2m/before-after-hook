@@ -90,7 +90,7 @@ test('hook.after("test", afterCheck)', function (group) {
       result.baz = 'ar'
     })
 
-    hook('test', {optionFoo: 'bar'}, function () {
+    hook('test', { optionFoo: 'bar' }, function () {
       return {
         foo: 'bar',
         otherFoo: 'bar'

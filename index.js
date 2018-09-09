@@ -11,7 +11,7 @@ function Hook () {
 
   var hook = register.bind(null, state)
   hook.remove = {}
-  hook.api = {remove: {}}
+  hook.api = { remove: {} }
 
   ;['before', 'error', 'after'].forEach(function (kind) {
     hook[kind] = hook.api[kind] = addHook.bind(null, state, kind)
