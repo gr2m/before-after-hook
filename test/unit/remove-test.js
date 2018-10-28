@@ -14,11 +14,7 @@ test('remove("before", "name", method) with empty registry', function (t) {
 test('remove("before", "name", method) with method that cannot be found', function (t) {
   var state = {
     registry: {
-      test: {
-        before: [],
-        error: [],
-        after: []
-      }
+      test: []
     }
   }
   remove(state, 'before', 'test', function () {})
