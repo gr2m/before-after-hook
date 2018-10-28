@@ -3,7 +3,7 @@ var test = require('tape')
 
 var Hook = require('../../')
 
-test('hook.error("test", afterCheck)', function (group) {
+test('hook.error("test", handleError)', function (group) {
   group.test('order', function (t) {
     var hook = new Hook()
     var calls = []
@@ -134,7 +134,9 @@ test('hook.error("test", afterCheck)', function (group) {
 
       .catch(function (error) {
         t.equal(errorHandler.callCount, 2)
-        t.equal(error.message, 'oops')
+        t.ok(method.lastCall.k < errorHandler.calls[0].k)
+        t.ok(method.lastCall.k < errorHandler.calls[1].k)
+        t.equal(error.message, 'error handler oops')
         t.end()
       })
   })
