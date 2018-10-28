@@ -1,6 +1,6 @@
 # before-after-hook
 
-> asynchronous before/error/after hooks for internal functionality
+> asynchronous hooks for internal functionality
 
 [![Build Status](https://travis-ci.org/gr2m/before-after-hook.svg?branch=master)](https://travis-ci.org/gr2m/before-after-hook)
 [![Coverage Status](https://coveralls.io/repos/gr2m/before-after-hook/badge.svg?branch=master)](https://coveralls.io/r/gr2m/before-after-hook?branch=master)
@@ -13,25 +13,31 @@
 const hook = new Hook()
 
 // Create a hook
-hook('get', getData)
-  .then(handleData)
-  .catch(handleGetError)
+function getData (options) {
+  return hook('get', options, fetchFromDatabase)
+    .then(handleData)
+    .catch(handleGetError)
+}
 
 // register before/error/after hooks.
-// The methods can be asynchronous by returning a Promise
+// The methods can be async or return a promise
 hook.before('get', beforeHook)
 hook.error('get', errorHook)
 hook.after('get', afterHook)
+
+getData({id: 123})
 ```
 
 The methods are executed in the following order
 
 1. `beforeHook`
-2. `getData`
+2. `fetchFromDatabase`
 3. `afterHook`
 4. `handleData`
 
-If an error is thrown in `beforeHook` or `getData` then `errorHook` is
+`beforeHook` can mutate `options` before it’s passed to `fetchFromDatabase`.
+
+If an error is thrown in `beforeHook` or `fetchFromDatabase` then `errorHook` is
 called next.
 
 If `afterHook` throws an error then `handleGetError` is called instead
@@ -39,6 +45,22 @@ of `handleData`.
 
 If `errorHook` throws an error then `handleGetError` is called next, otherwise
 `afterHook` and `handleData`.
+
+You can also use `hook.wrap` to achieve the same thing as shown above:
+
+```js
+hook.wrap('get', async (method, options) => {
+  await beforeHook(options)
+
+  try {
+    const result = method(options)
+  } catch (error) {
+    await errorHook(error, options)
+  }
+
+  await afterHook(result, options)
+})
+```
 
 ## Install
 
@@ -56,9 +78,8 @@ Or download [the latest `before-after-hook.min.js`](https://github.com/gr2m/befo
 - [hook.before()](#hookbefore)
 - [hook.error()](#hookerror)
 - [hook.after()](#hookafter)
-- [hook.remove.before()](#hookremovebefore)
-- [hook.remove.error()](#hookremoveerror)
-- [hook.remove.after()](#hookremoveafter)
+- [hook.wrap()](#hookwrap)
+- [hook.remove()](#hookremove)
 
 ### Constructor
 
@@ -75,10 +96,9 @@ Use the `api` property to return the public API:
 
 - [hook.before()](#hookbefore)
 - [hook.after()](#hookafter)
-- [hook.error()](#hookafter)
-- [hook.remove.before()](#hookremovebefore)
-- [hook.remove.after()](#hookremoveafter)
-- [hook.remove.error()](#hookremoveerror)
+- [hook.error()](#hookerror)
+- [hook.wrap()](#hookwrap)
+- [hook.remove()](#hookremove)
 
 That way you don’t need to expose the [hook()](#hook) method to consumers of your library
 
@@ -292,8 +312,8 @@ hook.after(name, method)
     <th align="left"><code>method</code></th>
     <td>Function</td>
     <td>
-      Executed after wrapped method. Called with what the wrapped method
-      resolves with the hook’s <code>options</code> argument.
+    Executed after wrapped method. Called with what the wrapped method
+    resolves with the hook’s <code>options</code> argument.
     </td>
     <td>Yes</td>
   </tr>
@@ -311,12 +331,72 @@ hook.after('save', function (result, options) {
 })
 ```
 
-### hook.remove.before()
+### hook.wrap()
 
-Removes before hook for given name. Returns `hook` instance for chaining.
+Add wrap hook for given name. Returns `hook` instance for chaining.
 
 ```js
-hook.remove.before(name, beforeHookMethod)
+hook.wrap(name, method)
+```
+
+<table>
+  <thead>
+    <tr>
+      <th>Argument</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Required</th>
+    </tr>
+  </thead>
+  <tr>
+    <th align="left"><code>name</code></th>
+    <td>String</td>
+    <td>Hook name, for example <code>'save'</code></td>
+    <td>Yes</td>
+  </tr>
+  <tr>
+    <th align="left"><code>method</code></th>
+    <td>Function</td>
+    <td>
+      Receives both the wrapped method and the passed options as arguments so it can add logic before and after the wrapped method, it can handle errors and even replace the wrapped method altogether
+    </td>
+    <td>Yes</td>
+  </tr>
+</table>
+
+Example
+
+```js
+hook.wrap('save', async function (record, method) {
+  if (!record.name) {
+    throw new Error('name property is required')
+  }
+
+  try {
+    const result = await method(options)
+
+    if (result.updatedAt) {
+      app.emit('update', result)
+    } else {
+      app.emit('create', result)
+    }
+
+    return result
+  } catch (error) {
+    if (error.ignore) return
+    throw error
+  }
+})
+```
+
+See also: [Test mock example](examples/test-mock-example.md)
+
+### hook.remove()
+
+Removes hook for given name. Returns `hook` instance for chaining.
+
+```js
+hook.remove(name, hookMethod)
 ```
 
 <table>
@@ -338,7 +418,7 @@ hook.remove.before(name, beforeHookMethod)
     <th align="left"><code>beforeHookMethod</code></th>
     <td>Function</td>
     <td>
-      Same function that was previously passed to <code>hook.before()</code>
+      Same function that was previously passed to <code>hook.before()</code>, <code>hook.error()</code>, <code>hook.after()</code> or <code>hook.wrap()</code>
     </td>
     <td>Yes</td>
   </tr>
@@ -347,85 +427,7 @@ hook.remove.before(name, beforeHookMethod)
 Example
 
 ```js
-hook.remove.before('save', validateRecord)
-```
-
-### hook.remove.error()
-
-Removes error hook for given name. Returns `hook` instance for chaining.
-
-```js
-hook.remove.error(name, errorHookMethod)
-```
-
-<table>
-  <thead>
-    <tr>
-      <th>Argument</th>
-      <th>Type</th>
-      <th>Description</th>
-      <th>Required</th>
-    </tr>
-  </thead>
-  <tr>
-    <th align="left"><code>name</code></th>
-    <td>String</td>
-    <td>Hook name, for example <code>'save'</code></td>
-    <td>Yes</td>
-  </tr>
-  <tr>
-    <th align="left"><code>errorHookMethod</code></th>
-    <td>Function</td>
-    <td>
-      Same function that was previously passed to <code>hook.error()</code>
-    </td>
-    <td>Yes</td>
-  </tr>
-</table>
-
-Example
-
-```js
-hook.remove.error('save', handleError)
-```
-
-### hook.remove.after()
-
-Removes after hook for given name. Returns `hook` instance for chaining.
-
-```js
-hook.remove.after(name, afterHookMethod)
-```
-
-<table>
-  <thead>
-    <tr>
-      <th>Argument</th>
-      <th>Type</th>
-      <th>Description</th>
-      <th>Required</th>
-    </tr>
-  </thead>
-  <tr>
-    <th align="left"><code>name</code></th>
-    <td>String</td>
-    <td>Hook name, for example <code>'save'</code></td>
-    <td>Yes</td>
-  </tr>
-  <tr>
-    <th align="left"><code>afterHookMethod</code></th>
-    <td>Function</td>
-    <td>
-      Same function that was previously passed to <code>hook.after()</code>
-    </td>
-    <td>Yes</td>
-  </tr>
-</table>
-
-Example
-
-```js
-hook.remove.after('save', triggerEvents)
+hook.remove('save', validateRecord)
 ```
 
 ## See also
