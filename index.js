@@ -10,10 +10,10 @@ function Hook () {
   }
 
   var hook = register.bind(null, state)
-  hook.remove = {}
-  hook.api = { remove: {} }
+  hook.api = { remove: removeHook.bind(null, state, null) }
+  hook.remove = removeHook.bind(null, state, null)
 
-  ;['before', 'error', 'after'].forEach(function (kind) {
+  ;['before', 'error', 'after', 'wrap'].forEach(function (kind) {
     hook[kind] = hook.api[kind] = addHook.bind(null, state, kind)
     hook.remove[kind] = hook.api.remove[kind] = removeHook.bind(null, state, kind)
   })
