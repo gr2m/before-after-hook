@@ -15,6 +15,11 @@ branches:
     - master
     - /^greenkeeper.*$/
 
+stages:
+  - test
+  - name: release
+    if: branch = master AND type IN (push)
+
 jobs:
   include:
     - stage: release
