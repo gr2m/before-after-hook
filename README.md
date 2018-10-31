@@ -33,7 +33,7 @@ The methods are executed in the following order
 1. `beforeHook`
 2. `fetchFromDatabase`
 3. `afterHook`
-4. `handleData`
+4. `getData`
 
 `beforeHook` can mutate `options` before it’s passed to `fetchFromDatabase`.
 
@@ -41,19 +41,19 @@ If an error is thrown in `beforeHook` or `fetchFromDatabase` then `errorHook` is
 called next.
 
 If `afterHook` throws an error then `handleGetError` is called instead
-of `handleData`.
+of `getData`.
 
 If `errorHook` throws an error then `handleGetError` is called next, otherwise
-`afterHook` and `handleData`.
+`afterHook` and `getData`.
 
 You can also use `hook.wrap` to achieve the same thing as shown above:
 
 ```js
-hook.wrap('get', async (method, options) => {
+hook.wrap('get', async (getData, options) => {
   await beforeHook(options)
 
   try {
-    const result = method(options)
+    const result = getData(options)
   } catch (error) {
     await errorHook(error, options)
   }
@@ -367,13 +367,13 @@ hook.wrap(name, method)
 Example
 
 ```js
-hook.wrap('save', async function (record, method) {
+hook.wrap('save', async function (saveInDatabase, options) {
   if (!record.name) {
     throw new Error('name property is required')
   }
 
   try {
-    const result = await method(options)
+    const result = await saveInDatabase(options)
 
     if (result.updatedAt) {
       app.emit('update', result)

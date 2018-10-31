@@ -35,7 +35,7 @@ are what we expect.
 ```js
 test('client.getTodo(123)', () => {
   const client = getClient()
-  client.hook.wrap('request', (options, fetch) => {
+  client.hook.wrap('request', (fetch, options) => {
     assert.equal(options.method, 'GET')
     assert.equal(options.url, 'https://api.acme-inc.com/todos/123')
   })
