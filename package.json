@@ -4,6 +4,7 @@
   "description": "asynchronous before/error/after hooks for internal functionality",
   "files": [
     "index.js",
+    "index.d.ts",
     "lib"
   ],
   "types": "./index.d.ts",
