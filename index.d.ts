@@ -1,11 +1,11 @@
 interface HookInstance {
   (name: string, method: (options: any) => any): Promise<any>
   (name: string, options: any, method: (options: any) => any): Promise<any>
-  before (name: string, method: (options: any) => any): Promise<any>
-  error (name: string, method: (options: any) => any): Promise<any>
-  after (name: string, method: (options: any) => any): Promise<any>
-  wrap (name: string, method: (options: any) => any): Promise<any>
-  remove (name: string, beforeHookMethod: (options: any) => any): Promise<any>
+  before (name: string, method: (options: any) => any): HookInstance
+  error (name: string, method: (options: any) => any): HookInstance
+  after (name: string, method: (options: any) => any): HookInstance
+  wrap (name: string, method: (options: any) => any): HookInstance
+  remove (name: string, beforeHookMethod: (options: any) => any): HookInstance
 }
 
 interface HookType {
