@@ -11,5 +11,5 @@ interface HookType {
   new (): HookInstance
 }
 
-const Hook: HookType
+declare const Hook: HookType
 export = Hook
