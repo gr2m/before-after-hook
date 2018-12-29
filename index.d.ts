@@ -1,6 +1,6 @@
 interface HookInstance {
-  (name: string, method: (options: any) => any): Promise<any>
-  (name: string, options: any, method: (options: any) => any): Promise<any>
+  (name: string | string[], method: (options: any) => any): Promise<any>
+  (name: string | string[], options: any, method: (options: any) => any): Promise<any>
   before (name: string, method: (options: any) => any): HookInstance
   error (name: string, method: (options: any) => any): HookInstance
   after (name: string, method: (options: any) => any): HookInstance
