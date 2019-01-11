@@ -51,5 +51,15 @@ test('hook(name, options, method)', function (group) {
       .catch(t.error)
   })
 
+  group.test('no handlers defined (#51)', function (t) {
+    var hook = new Hook()
+    var options = { foo: 'bar' }
+
+    hook('test', options, function (_options) {
+      t.deepLooseEqual(options, _options)
+      t.end()
+    })
+  })
+
   group.end()
 })
