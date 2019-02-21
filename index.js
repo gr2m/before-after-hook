@@ -1,5 +1,3 @@
-module.exports = Hook
-
 var register = require('./lib/register')
 var addHook = require('./lib/add')
 var removeHook = require('./lib/remove')
@@ -27,7 +25,7 @@ function unnamedHook (state) {
   return unnamedHook
 }
 
-function Hook () {
+module.Hook = function Hook () {
   var state = {
     registry: {}
   }

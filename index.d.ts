@@ -1,32 +1,32 @@
-interface HookInstance {
+interface Hook {
   /**
    * Invoke before and after hooks.
    */
-  (name: string | string[], method: (options: any) => any): Promise<any>
+  (name: string | string[], method: (options: any) => Promise<any> | any): Promise<any>
   /**
    * Invoke before and after hooks.
    */
-  (name: string | string[], options: any, method: (options: any) => any): Promise<any>
+  (name: string | string[], options: any, method: (options: any) => Promise<any> | any): Promise<any>
   /**
    * Add before hook for given name. Returns `hook` instance for chaining.
    */
-  before (name: string, method: (options: any) => Promise<any> | any): HookInstance
+  before (name: string, method: (options: any) => Promise<any> | any): Hook
   /**
    * Add error hook for given name. Returns `hook` instance for chaining.
    */
-  error (name: string, method: (options: any) => Promise<any> | any): HookInstance
+  error (name: string, method: (options: any) => Promise<any> | any): Hook
   /**
    * Add after hook for given name. Returns `hook` instance for chaining.
    */
-  after (name: string, method: (options: any) => Promise<any> | any): HookInstance
+  after (name: string, method: (options: any) => Promise<any> | any): Hook
   /**
    * Add wrap hook for given name. Returns `hook` instance for chaining.
    */
-  wrap (name: string, method: (options: any) => Promise<any> | any): HookInstance
+  wrap (name: string, method: (options: any) => Promise<any> | any): Hook
   /**
    * Removes hook for given name. Returns `hook` instance for chaining.
    */
-  remove (name: string, beforeHookMethod: (options: any) => Promise<any> | any): HookInstance
+  remove (name: string, beforeHookMethod: (options: any) => Promise<any> | any): Hook
 
   /**
    * Creates a nameless hook instance that allows passing down typings for the options
@@ -73,8 +73,4 @@ interface UnnamedHook<T> {
   ): UnnamedHook<T>;
 }
 
-interface HookType {
-  new (): HookInstance
-}
-
-export declare const Hook: HookType
+export declare const Hook: {new (): Hook}
