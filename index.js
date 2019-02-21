@@ -1,7 +1,3 @@
-module.exports = Hook
-// expose constructor as a named property for Typescript
-module.exports.Hook = Hook
-
 var register = require('./lib/register')
 var addHook = require('./lib/add')
 var removeHook = require('./lib/remove')
@@ -41,3 +37,7 @@ function Hook () {
 
   return hook
 }
+
+module.exports = Hook
+// expose constructor as a named property for Typescript
+module.exports.Hook = Hook
