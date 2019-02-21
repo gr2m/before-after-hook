@@ -73,5 +73,9 @@ interface UnnamedHook<T> {
   ): UnnamedHook<T>;
 }
 
-const Hook: {new (): Hook}
-export default Hook;
+interface HookType {
+  new (): HookInstance
+}
+
+declare const Hook: HookType
+export = Hook
