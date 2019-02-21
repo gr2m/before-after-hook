@@ -1,3 +1,7 @@
+module.exports = Hook
+// expose constructor as a named property for Typescript
+module.exports.Hook = Hook
+
 var register = require('./lib/register')
 var addHook = require('./lib/add')
 var removeHook = require('./lib/remove')
@@ -25,7 +29,7 @@ function unnamedHook (state) {
   return unnamedHook
 }
 
-module.Hook = function Hook () {
+function Hook () {
   var state = {
     registry: {}
   }
