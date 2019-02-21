@@ -1,4 +1,4 @@
-interface Hook {
+interface HookInstance {
   /**
    * Invoke before and after hooks.
    */
@@ -10,23 +10,23 @@ interface Hook {
   /**
    * Add before hook for given name. Returns `hook` instance for chaining.
    */
-  before (name: string, method: (options: any) => Promise<any> | any): Hook
+  before (name: string, method: (options: any) => Promise<any> | any): HookInstance
   /**
    * Add error hook for given name. Returns `hook` instance for chaining.
    */
-  error (name: string, method: (options: any) => Promise<any> | any): Hook
+  error (name: string, method: (options: any) => Promise<any> | any): HookInstance
   /**
    * Add after hook for given name. Returns `hook` instance for chaining.
    */
-  after (name: string, method: (options: any) => Promise<any> | any): Hook
+  after (name: string, method: (options: any) => Promise<any> | any): HookInstance
   /**
    * Add wrap hook for given name. Returns `hook` instance for chaining.
    */
-  wrap (name: string, method: (options: any) => Promise<any> | any): Hook
+  wrap (name: string, method: (options: any) => Promise<any> | any): HookInstance
   /**
    * Removes hook for given name. Returns `hook` instance for chaining.
    */
-  remove (name: string, beforeHookMethod: (options: any) => Promise<any> | any): Hook
+  remove (name: string, beforeHookMethod: (options: any) => Promise<any> | any): HookInstance
 
   /**
    * Creates a nameless hook instance that allows passing down typings of the options
