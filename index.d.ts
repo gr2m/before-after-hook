@@ -81,6 +81,6 @@ declare namespace __Hook {
 
 declare var Hook: __Hook.Static;
 
-declare module 'hook' {
+declare module 'before-after-hook' {
   export = Hook;
 }
