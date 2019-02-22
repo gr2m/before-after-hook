@@ -1,4 +1,4 @@
-interface HookInstance {
+interface Hook {
   /**
    * Invoke before and after hooks.
    */
@@ -73,10 +73,6 @@ interface UnnamedHookInstance<T> {
   ): UnnamedHookInstance<T>;
 }
 
-interface HookType {
-  new (): HookInstance
-}
-
-declare const Hook: HookType
+declare const Hook: {new (): Hook}
 
 export = Hook
