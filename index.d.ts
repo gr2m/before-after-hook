@@ -74,7 +74,7 @@ interface UnnamedHook<T> {
 }
 
 interface HookType {
-  new (): HookInstance
+  (): HookInstance
 }
 
 declare const Hook: HookType
