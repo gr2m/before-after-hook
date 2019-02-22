@@ -81,4 +81,4 @@ declare namespace Hook {
   declare const Hook: HookType
 }
 
-export = Hook
+export default Hook
