@@ -38,38 +38,83 @@ interface UnnamedHookInstance<T> {
   /**
    * Invoke before and after hooks without options
    */
-  (method: (options: T) => Promise<T | null | void> | T | null | void): Promise<T>
+  (method: (options: T) => T | null | void): Promise<T>
+  /**
+   * Invoke before and after hooks without options
+   */
+  (method: (options: T) => Promise<T | null | void>): Promise<T>
   /**
    * Invoke before and after hooks with options
    */
-  (options: T, method: (options: T) => Promise<T | null | void> | T | null | void): Promise<T>
+  (options: T, method: (options: T) => T | null | void): Promise<T>
+  /**
+   * Invoke before and after hooks with options
+   */
+  (options: T, method: (options: T) => Promise<T | null | void>): Promise<T>
 
+  /**
+   * Add before hook. Returns `UnnamedHook` instance for chaining.
+   */
   before(
-    beforeFn: (options: T) => Promise<T | null | void> | T | null | void
+    beforeFn: (options: T) => T | null | void
+  ): UnnamedHookInstance<T>;
+  /**
+   * Add before hook. Returns `UnnamedHook` instance for chaining.
+   */
+  before(
+    beforeFn: (options: T) => Promise<T | null | void>
+  ): UnnamedHookInstance<T>;
+
+  /**
+   * Add error hook. Returns `UnnamedHook` instance for chaining.
+   */
+  error(
+    errorFn: (options: T) => T | null | void
   ): UnnamedHookInstance<T>;
   /**
    * Add error hook. Returns `UnnamedHook` instance for chaining.
    */
   error(
-    errorFn: (options: T) => Promise<T | null | void> | T | null | void
+    errorFn: (options: T) => Promise<T | null | void>
+  ): UnnamedHookInstance<T>;
+
+  /**
+   * Add after hook. Returns `UnnamedHook` instance for chaining.
+   */
+  after(
+    afterFn: (options: T) => T | null | void
   ): UnnamedHookInstance<T>;
   /**
    * Add after hook. Returns `UnnamedHook` instance for chaining.
    */
   after(
-    afterFn: (options: T) => Promise<T | null | void> | T | null | void
+    afterFn: (options: T) => Promise<T | null | void>
+  ): UnnamedHookInstance<T>;
+
+  /**
+   * Add wrap hook. Returns `UnnamedHook` instance for chaining.
+   */
+  wrap(
+    wrapFn: (options: T) => T | null | void
   ): UnnamedHookInstance<T>;
   /**
    * Add wrap hook. Returns `UnnamedHook` instance for chaining.
    */
   wrap(
-    wrapFn: (options: T) => Promise<T | null | void> | T | null | void
+    wrapFn: (options: T) => Promise<T | null | void>
+  ): UnnamedHookInstance<T>;
+
+  /**
+   * Removes hook. Returns `UnnamedHook` instance for chaining.
+   */
+  remove(
+    beforeHookMethod: (options: T) => T | null | void
   ): UnnamedHookInstance<T>;
   /**
    * Removes hook. Returns `UnnamedHook` instance for chaining.
    */
   remove(
-    beforeHookMethod: (options: T) => Promise<T | null | void> | T | null | void
+    beforeHookMethod: (options: T) => Promise<T | null | void>
   ): UnnamedHookInstance<T>;
 }
 
