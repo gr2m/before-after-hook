@@ -2,7 +2,7 @@ var test = require('tape')
 
 var Hook = require('../../')
 
-test.only('hook.unnamed(options, method)', function (group) {
+test('hook.unnamed(options, method)', function (group) {
   group.test('multiple names', function (t) {
     var hook = new Hook()
     var calls = []
