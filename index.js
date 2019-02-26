@@ -17,9 +17,8 @@ function bindApi (hook, state, name) {
   })
 }
 
-function unnamedHook (state) {
-  var unnamedHookIterator = 0
-  var unnamedHookName = 'unnamedHook' + unnamedHookIterator++
+function unnamedHook (state, hookIteration) {
+  var unnamedHookName = 'unnamedHook' + hookIteration
   var unnamedHook = register.bind(null, state, unnamedHookName)
   bindApi(unnamedHook, state, unnamedHookName)
   return unnamedHook
@@ -33,7 +32,8 @@ function Hook () {
   var hook = register.bind(null, state)
   bindApi(hook, state)
 
-  hook.unnamed = unnamedHook.bind(null, state)
+  var unnamedHookIterator = 0;
+  hook.unnamed = unnamedHook.bind(null, state, unnamedHookIterator++)
 
   return hook
 }
