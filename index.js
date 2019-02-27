@@ -17,14 +17,29 @@ function bindApi (hook, state, name) {
   })
 }
 
-function unnamedHook (state, hookIteration) {
-  var unnamedHookName = 'unnamedHook' + hookIteration()
-  var unnamedHook = register.bind(null, state, unnamedHookName)
-  bindApi(unnamedHook, state, unnamedHookName)
+var singularHookState = {
+  registry: {}
+}
+var singularHookIterator = 0
+var singularHookDeprecationMessageDisplayed = false
+function HookSingular () {
+  if (!singularHookDeprecationMessageDisplayed) {
+    console.warn('[before-after-hook]: "Hook.Singular()" deprecation warning. Will be renamed to "Hook()" in the next major release.')
+    singularHookDeprecationMessageDisplayed = true
+  }
+  var unnamedHookName = 'unnamedHook' + singularHookIterator++
+  var unnamedHook = register.bind(null, singularHookState, unnamedHookName)
+  bindApi(unnamedHook, singularHookState, unnamedHookName)
   return unnamedHook
 }
 
-function Hook () {
+var collectionHookDeprecationMessageDisplayed = false
+function HookCollection (displayDeprecationWarning) {
+  if (!collectionHookDeprecationMessageDisplayed && displayDeprecationWarning) {
+    console.warn('[before-after-hook]: "Hook()" deprecation/repurpose warning. In the next major release "Hook()" will become a singleton. To continue using hook collections, use "Hook.Collection()".')
+    collectionHookDeprecationMessageDisplayed = true
+  }
+
   var state = {
     registry: {}
   }
@@ -32,11 +47,13 @@ function Hook () {
   var hook = register.bind(null, state)
   bindApi(hook, state)
 
-  var unnamedHookIterator = 0
-  hook.unnamed = unnamedHook.bind(null, state, () => unnamedHookIterator++)
-
   return hook
 }
+
+HookCollection.Singular = HookSingular.bind(null)
+HookCollection.Collection = HookCollection.bind(null, false)
+
+var Hook = HookCollection // temporary, can be removed when Hook becomes singular
 
 module.exports = Hook
 // expose constructor as a named property for Typescript
