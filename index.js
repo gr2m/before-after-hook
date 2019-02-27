@@ -34,8 +34,8 @@ function HookSingular () {
 }
 
 var collectionHookDeprecationMessageDisplayed = false
-function HookCollection (displayDeprecationWarning) {
-  if (!collectionHookDeprecationMessageDisplayed && displayDeprecationWarning) {
+function HookCollection (ignoreDeprecationWarning) {
+  if (!collectionHookDeprecationMessageDisplayed && !ignoreDeprecationWarning) {
     console.warn('[before-after-hook]: "Hook()" deprecation/repurpose warning. In the next major release "Hook()" will become a singleton. To continue using hook collections, use "Hook.Collection()".')
     collectionHookDeprecationMessageDisplayed = true
   }
@@ -51,7 +51,7 @@ function HookCollection (displayDeprecationWarning) {
 }
 
 HookCollection.Singular = HookSingular.bind(null)
-HookCollection.Collection = HookCollection.bind(null, false)
+HookCollection.Collection = HookCollection.bind(null, true)
 
 var Hook = HookCollection // temporary, can be removed when Hook becomes singular
 
