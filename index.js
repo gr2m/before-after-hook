@@ -33,13 +33,7 @@ function HookSingular () {
   return unnamedHook
 }
 
-var collectionHookDeprecationMessageDisplayed = false
-function HookCollection (ignoreDeprecationWarning) {
-  if (!collectionHookDeprecationMessageDisplayed && !ignoreDeprecationWarning) {
-    console.warn('[before-after-hook]: "Hook()" deprecation/repurpose warning. In the next major release "Hook()" will become a singleton. To continue using hook collections, use "Hook.Collection()".')
-    collectionHookDeprecationMessageDisplayed = true
-  }
-
+function HookCollection () {
   var state = {
     registry: {}
   }
@@ -50,10 +44,17 @@ function HookCollection (ignoreDeprecationWarning) {
   return hook
 }
 
-HookCollection.Singular = HookSingular.bind(null)
-HookCollection.Collection = HookCollection.bind(null, true)
+var collectionHookDeprecationMessageDisplayed = false
+function Hook () {
+  if (!collectionHookDeprecationMessageDisplayed) {
+    console.warn('[before-after-hook]: "Hook()" deprecation/repurpose warning. In the next major release "Hook()" will become a singleton. To continue using hook collections, use "Hook.Collection()".')
+    collectionHookDeprecationMessageDisplayed = true
+  }
+  return HookCollection()
+}
 
-var Hook = HookCollection // temporary, can be removed when Hook becomes singular
+Hook.Singular = HookSingular.bind(null)
+Hook.Collection = HookCollection.bind(null)
 
 module.exports = Hook
 // expose constructor as a named property for Typescript
