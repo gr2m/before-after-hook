@@ -18,20 +18,19 @@ function bindApi (hook, state, name) {
   })
 }
 
-var singularHookState = {
-  registry: {}
-}
-var singularHookIterator = 0
 var singularHookDeprecationMessageDisplayed = false
 function HookSingular () {
   if (!singularHookDeprecationMessageDisplayed) {
     console.warn('[before-after-hook]: "Hook.Singular()" deprecation warning. Will be renamed to "Hook()" in the next major release.')
     singularHookDeprecationMessageDisplayed = true
   }
-  var unnamedHookName = 'unnamedHook' + singularHookIterator++
-  var unnamedHook = register.bind(null, singularHookState, unnamedHookName)
-  bindApi(unnamedHook, singularHookState, unnamedHookName)
-  return unnamedHook
+  var singularHookName = 'hook'
+  var singularHookState = {
+    registry: {}
+  }
+  var singularHook = register.bind(null, singularHookState, singularHookName)
+  bindApi(singularHook, singularHookState, singularHookName)
+  return singularHook
 }
 
 function HookCollection () {
