@@ -42,7 +42,7 @@ function HookCollection () {
 var collectionHookDeprecationMessageDisplayed = false
 function Hook () {
   if (!collectionHookDeprecationMessageDisplayed) {
-    console.warn('[before-after-hook]: "Hook()" deprecation/repurpose warning. In the next major release "Hook()" will become a singleton. To continue using hook collections, use "Hook.Collection()".')
+    console.warn('[before-after-hook]: "Hook()" repurposing warning. Read more: https://github.com/gr2m/before-after-hook#upgrading-to-1.4 ')
     collectionHookDeprecationMessageDisplayed = true
   }
   return HookCollection()
