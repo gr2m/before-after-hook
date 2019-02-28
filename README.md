@@ -142,7 +142,6 @@ hook(options, fetchFromDatabase)
 hook.before('get', beforeHook)
 hook.after('get', afterHook)
 hook('get', options, fetchFromDatabase)
-}
 ```
 
 ## Hook collection API
