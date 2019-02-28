@@ -18,13 +18,8 @@ function bindApi (hook, state, name) {
   })
 }
 
-var singularHookDeprecationMessageDisplayed = false
 function HookSingular () {
-  if (!singularHookDeprecationMessageDisplayed) {
-    console.warn('[before-after-hook]: "Hook.Singular()" deprecation warning. Will be renamed to "Hook()" in the next major release.')
-    singularHookDeprecationMessageDisplayed = true
-  }
-  var singularHookName = 'hook'
+  var singularHookName = 'h'
   var singularHookState = {
     registry: {}
   }
