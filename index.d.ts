@@ -130,4 +130,6 @@ declare module "before-after-hook" {
 
   export const Singular: {new <T>(): HookSingular<T>}
   export const Collection: {new (): HookCollection}
+
+  export = Hook
 }
