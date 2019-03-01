@@ -2,7 +2,7 @@ var register = require('./lib/register')
 var addHook = require('./lib/add')
 var removeHook = require('./lib/remove')
 
-// https://stackoverflow.com/a/21792913
+// bind with array of arguments: https://stackoverflow.com/a/21792913
 var bind = Function.bind
 var bindable = bind.bind(bind)
 
