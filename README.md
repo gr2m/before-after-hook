@@ -53,7 +53,7 @@ hookCollection.after('get', afterHook)
 getData({id: 123})
 ```
 
-### Behind the scenes
+### Hook.Singular vs Hook.Collection
 
 There's no fundamental difference between the `Hook.Singular` and `Hook.Collection` hooks except for the fact that a hook from a collection requires you to pass along the name. Therefore the following explanation applies to both code snippets as described above.
 
