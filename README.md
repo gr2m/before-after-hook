@@ -549,9 +549,6 @@ import {Singular} from 'before-after-hook'
 const hook = new Singular<{foo: string}>();
 ```
 
-
-[gg](#upgrading-to-1.4)
-
 ## Upgrading to 1.4
 
 Since version 1.4 the `Hook` constructor has been deprecated in favor of becoming a singleton in the next major release. 
