@@ -48,8 +48,8 @@ function Hook () {
   return HookCollection()
 }
 
-Hook.Singular = HookSingular.bind(null)
-Hook.Collection = HookCollection.bind(null)
+Hook.Singular = HookSingular.bind()
+Hook.Collection = HookCollection.bind()
 
 module.exports = Hook
 // expose constructor as a named property for Typescript
