@@ -127,9 +127,9 @@ Using the singular hook is recommended for [TypeScript](#typescript)
 
 ### Singular API
 
-The singular hook is a reference to a single hook. This means that there's no need to pass along any identifier (such as a `name` as can be seen in the [Hook.Collection API](#collectionapi)).
+The singular hook is a reference to a single hook. This means that there's no need to pass along any identifier (such as a `name` as can be seen in the [Hook.Collection API](#hookcollectionapi)).
 
-The API of a singular hook is exactly the same as a collection hook and we therefore suggest you read the [Hook.Collection API](#collectionapi) and leave out any use of the `name` argument. Just skip it like described in this example:
+The API of a singular hook is exactly the same as a collection hook and we therefore suggest you read the [Hook.Collection API](#hookcollectionapi) and leave out any use of the `name` argument. Just skip it like described in this example:
 ```js
 const hook = new Hook.Singular()
 
@@ -161,27 +161,27 @@ The `Hook.Collection` constructor has no options and returns a `hookCollection` 
 methods below
 
 ```js
-const collection = new Hook.Collection()
+const hookCollection = new Hook.Collection()
 ```
 
-### collection.api
+### hookCollection.api
 
 Use the `api` property to return the public API:
 
-- [collection.before()](#collectionbefore)
-- [collection.after()](#collectionafter)
-- [collection.error()](#collectionerror)
-- [collection.wrap()](#collectionwrap)
-- [collection.remove()](#collectionremove)
+- [hookCollection.before()](#hookcollectionbefore)
+- [hookCollection.after()](#hookcollectionafter)
+- [hookCollection.error()](#hookcollectionerror)
+- [hookCollection.wrap()](#hookcollectionwrap)
+- [hookCollection.remove()](#hookcollectionremove)
 
-That way you don’t need to expose the [collection()](#collection) method to consumers of your library
+That way you don’t need to expose the [hookCollection()](#hookcollection) method to consumers of your library
 
-### collection()
+### hookCollection()
 
 Invoke before and after hooks. Returns a promise.
 
 ```js
-collection(nameOrNames, [options,] method)
+hookCollection(nameOrNames, [options,] method)
 ```
 
 <table>
@@ -223,12 +223,12 @@ Rejects with error that is thrown or rejected with by
 Simple Example
 
 ```js
-collection('save', record, function (record) {
+hookCollection('save', record, function (record) {
   return store.save(record)
 })
-// shorter:  collection('save', record, store.save)
+// shorter:  hookCollection('save', record, store.save)
 
-collection.before('save', function addTimestamps (record) {
+hookCollection.before('save', function addTimestamps (record) {
   const now = new Date().toISOString()
   if (record.createdAt) {
     record.updatedAt = now
@@ -241,17 +241,17 @@ collection.before('save', function addTimestamps (record) {
 Example defining multiple hooks at once.
 
 ```js
-collection(['add', 'save'], record, function (record) {
+hookCollection(['add', 'save'], record, function (record) {
   return store.save(record)
 })
 
-collection.before('add', function addTimestamps (record) {
+hookCollection.before('add', function addTimestamps (record) {
   if (!record.type) {
     throw new Error('type property is required')
   }
 })
 
-collection.before('save', function addTimestamps (record) {
+hookCollection.before('save', function addTimestamps (record) {
   if (!record.type) {
     throw new Error('type property is required')
   }
@@ -261,19 +261,19 @@ collection.before('save', function addTimestamps (record) {
 Defining multiple hooks is helpful if you have similar methods for which you want to define separate hooks, but also an additional hook that gets called for all at once. The example above is equal to this:
 
 ```js
-collection('add', record, function (record) {
-  return collection('save', record, function (record) {
+hookCollection('add', record, function (record) {
+  return hookCollection('save', record, function (record) {
     return store.save(record)
   })
 })
 ```
 
-### collection.before()
+### hookCollection.before()
 
-Add before hook for given name. Returns `collection` instance for chaining.
+Add before hook for given name. Returns `hookCollection` instance for chaining.
 
 ```js
-collection.before(name, method)
+hookCollection.before(name, method)
 ```
 
 <table>
@@ -306,19 +306,19 @@ collection.before(name, method)
 Example
 
 ```js
-collection.before('save', function validate (record) {
+hookCollection.before('save', function validate (record) {
   if (!record.name) {
     throw new Error('name property is required')
   }
 })
 ```
 
-### collection.error()
+### hookCollection.error()
 
-Add error hook for given name. Returns `collection` instance for chaining.
+Add error hook for given name. Returns `hookCollection` instance for chaining.
 
 ```js
-collection.error(name, method)
+hookCollection.error(name, method)
 ```
 
 <table>
@@ -353,18 +353,18 @@ collection.error(name, method)
 Example
 
 ```js
-collection.error('save', function (error, options) {
+hookCollection.error('save', function (error, options) {
   if (error.ignore) return
   throw error
 })
 ```
 
-### collection.after()
+### hookCollection.after()
 
 Add after hook for given name. Returns `hook` instance for chaining.
 
 ```js
-collection.after(name, method)
+hookCollection.after(name, method)
 ```
 
 <table>
@@ -396,7 +396,7 @@ collection.after(name, method)
 Example
 
 ```js
-collection.after('save', function (result, options) {
+hookCollection.after('save', function (result, options) {
   if (result.updatedAt) {
     app.emit('update', result)
   } else {
@@ -405,12 +405,12 @@ collection.after('save', function (result, options) {
 })
 ```
 
-### collection.wrap()
+### hookCollection.wrap()
 
-Add wrap hook for given name. Returns `collection` instance for chaining.
+Add wrap hook for given name. Returns `hookCollection` instance for chaining.
 
 ```js
-collection.wrap(name, method)
+hookCollection.wrap(name, method)
 ```
 
 <table>
@@ -441,7 +441,7 @@ collection.wrap(name, method)
 Example
 
 ```js
-collection.wrap('save', async function (saveInDatabase, options) {
+hookCollection.wrap('save', async function (saveInDatabase, options) {
   if (!record.name) {
     throw new Error('name property is required')
   }
@@ -465,12 +465,12 @@ collection.wrap('save', async function (saveInDatabase, options) {
 
 See also: [Test mock example](examples/test-mock-example.md)
 
-### collection.remove()
+### hookCollection.remove()
 
-Removes hook for given name. Returns `hook` instance for chaining.
+Removes hook for given name. Returns `hookCollection` instance for chaining.
 
 ```js
-collection.remove(name, hookMethod)
+hookCollection.remove(name, hookMethod)
 ```
 
 <table>
@@ -492,7 +492,7 @@ collection.remove(name, hookMethod)
     <th align="left"><code>beforeHookMethod</code></th>
     <td>Function</td>
     <td>
-      Same function that was previously passed to <code>collection.before()</code>, <code>collection.error()</code>, <code>collection.after()</code> or <code>collection.wrap()</code>
+      Same function that was previously passed to <code>hookCollection.before()</code>, <code>hookCollection.error()</code>, <code>hookCollection.after()</code> or <code>hookCollection.wrap()</code>
     </td>
     <td>Yes</td>
   </tr>
@@ -501,7 +501,7 @@ collection.remove(name, hookMethod)
 Example
 
 ```js
-collection.remove('save', validateRecord)
+hookCollection.remove('save', validateRecord)
 ```
 
 ## TypeScript
