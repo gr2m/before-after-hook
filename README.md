@@ -510,7 +510,7 @@ This library contains type definitions for TypeScript. When you use TypeScript w
 
 ```ts
 
-import * as Hook from 'before-after-hook'
+import {Hook} from 'before-after-hook'
 
 interface Foo {
   bar: string
@@ -544,9 +544,10 @@ const foo = hook({bar: 'random-string'}, function(foo) {
 
 An alternative import:
 ```ts
-import {Singular} from 'before-after-hook'
+import {Singular, Collection} from 'before-after-hook'
 
 const hook = new Singular<{foo: string}>();
+const hookCollection = new Collection();
 ```
 
 ## Upgrading to 1.4

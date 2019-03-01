@@ -52,5 +52,7 @@ Hook.Singular = HookSingular.bind()
 Hook.Collection = HookCollection.bind()
 
 module.exports = Hook
-// expose constructor as a named property for Typescript
+// expose constructors as a named property for TypeScript
 module.exports.Hook = Hook
+module.exports.Singular = Hook.Singular
+module.exports.Collection = Hook.Collection
