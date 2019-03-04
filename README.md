@@ -9,25 +9,53 @@
 
 ## Usage
 
+### Singular hook
+
+Recommended for [TypeScript](#typescript)
 ```js
-// instantiate hook API
-const hook = new Hook()
+// instantiate singular hook API
+const hook = new Hook.Singular()
 
 // Create a hook
 function getData (options) {
-  return hook('get', options, fetchFromDatabase)
+  return hook(options, fetchFromDatabase)
     .then(handleData)
     .catch(handleGetError)
 }
 
 // register before/error/after hooks.
 // The methods can be async or return a promise
-hook.before('get', beforeHook)
-hook.error('get', errorHook)
-hook.after('get', afterHook)
+hook.before(beforeHook)
+hook.error(errorHook)
+hook.after(afterHook)
 
 getData({id: 123})
 ```
+
+### Hook collection
+```js
+// instantiate hook collection API
+const hookCollection = new Hook.Collection()
+
+// Create a hook
+function getData (options) {
+  return hookCollection('get', options, fetchFromDatabase)
+    .then(handleData)
+    .catch(handleGetError)
+}
+
+// register before/error/after hooks.
+// The methods can be async or return a promise
+hookCollection.before('get', beforeHook)
+hookCollection.error('get', errorHook)
+hookCollection.after('get', afterHook)
+
+getData({id: 123})
+```
+
+### Hook.Singular vs Hook.Collection
+
+There's no fundamental difference between the `Hook.Singular` and `Hook.Collection` hooks except for the fact that a hook from a collection requires you to pass along the name. Therefore the following explanation applies to both code snippets as described above.
 
 The methods are executed in the following order
 
@@ -47,10 +75,10 @@ of `getData`.
 If `errorHook` throws an error then `handleGetError` is called next, otherwise
 `afterHook` and `getData`.
 
-You can also use `hook.wrap` to achieve the same thing as shown above:
+You can also use `hook.wrap` to achieve the same thing as shown above (collection example):
 
 ```js
-hook.wrap('get', async (getData, options) => {
+hookCollection.wrap('get', async (getData, options) => {
   await beforeHook(options)
 
   try {
@@ -73,42 +101,87 @@ Or download [the latest `before-after-hook.min.js`](https://github.com/gr2m/befo
 
 ## API
 
-- [Constructor](#constructor)
-- [hook.api](#hookapi)
-- [hook()](#hook)
-- [hook.before()](#hookbefore)
-- [hook.error()](#hookerror)
-- [hook.after()](#hookafter)
-- [hook.wrap()](#hookwrap)
-- [hook.remove()](#hookremove)
+- [Singular Hook Constructor](#singular-hook-api)
+- [Hook Collection Constructor](#hook-collection-api)
 
-### Constructor
+## Singular hook API
 
-The `Hook` constructor has no options and returns a `hook` instance with the
+- [Singular constructor](#singular-constructor)
+- [hook.api](#singular-api)
+- [hook()](#singular-api)
+- [hook.before()](#singular-api)
+- [hook.error()](#singular-api)
+- [hook.after()](#singular-api)
+- [hook.wrap()](#singular-api)
+- [hook.remove()](#singular-api)
+
+### Singular constructor
+
+The `Hook.Singular` constructor has no options and returns a `hook` instance with the
+methods below:
+
+```js
+const hook = new Hook.Singular()
+```
+Using the singular hook is recommended for [TypeScript](#typescript)
+
+### Singular API
+
+The singular hook is a reference to a single hook. This means that there's no need to pass along any identifier (such as a `name` as can be seen in the [Hook.Collection API](#hookcollectionapi)).
+
+The API of a singular hook is exactly the same as a collection hook and we therefore suggest you read the [Hook.Collection API](#hookcollectionapi) and leave out any use of the `name` argument. Just skip it like described in this example:
+```js
+const hook = new Hook.Singular()
+
+// good
+hook.before(beforeHook)
+hook.after(afterHook)
+hook(options, fetchFromDatabase)
+
+// bad
+hook.before('get', beforeHook)
+hook.after('get', afterHook)
+hook('get', options, fetchFromDatabase)
+```
+
+## Hook collection API
+
+- [Collection constructor](#collection-constructor)
+- [collection.api](#collectionapi)
+- [collection()](#collection)
+- [collection.before()](#collectionbefore)
+- [collection.error()](#collectionerror)
+- [collection.after()](#collectionafter)
+- [collection.wrap()](#collectionwrap)
+- [collection.remove()](#collectionremove)
+
+### Collection constructor
+
+The `Hook.Collection` constructor has no options and returns a `hookCollection` instance with the
 methods below
 
 ```js
-const hook = new Hook()
+const hookCollection = new Hook.Collection()
 ```
 
-### hook.api
+### hookCollection.api
 
 Use the `api` property to return the public API:
 
-- [hook.before()](#hookbefore)
-- [hook.after()](#hookafter)
-- [hook.error()](#hookerror)
-- [hook.wrap()](#hookwrap)
-- [hook.remove()](#hookremove)
+- [hookCollection.before()](#hookcollectionbefore)
+- [hookCollection.after()](#hookcollectionafter)
+- [hookCollection.error()](#hookcollectionerror)
+- [hookCollection.wrap()](#hookcollectionwrap)
+- [hookCollection.remove()](#hookcollectionremove)
 
-That way you don’t need to expose the [hook()](#hook) method to consumers of your library
+That way you don’t need to expose the [hookCollection()](#hookcollection) method to consumers of your library
 
-### hook()
+### hookCollection()
 
 Invoke before and after hooks. Returns a promise.
 
 ```js
-hook(nameOrNames, [options,] method)
+hookCollection(nameOrNames, [options,] method)
 ```
 
 <table>
@@ -150,12 +223,12 @@ Rejects with error that is thrown or rejected with by
 Simple Example
 
 ```js
-hook('save', record, function (record) {
+hookCollection('save', record, function (record) {
   return store.save(record)
 })
-// shorter:  hook('save', record, store.save)
+// shorter:  hookCollection('save', record, store.save)
 
-hook.before('save', function addTimestamps (record) {
+hookCollection.before('save', function addTimestamps (record) {
   const now = new Date().toISOString()
   if (record.createdAt) {
     record.updatedAt = now
@@ -168,17 +241,17 @@ hook.before('save', function addTimestamps (record) {
 Example defining multiple hooks at once.
 
 ```js
-hook(['add', 'save'], record, function (record) {
+hookCollection(['add', 'save'], record, function (record) {
   return store.save(record)
 })
 
-hook.before('add', function addTimestamps (record) {
+hookCollection.before('add', function addTimestamps (record) {
   if (!record.type) {
     throw new Error('type property is required')
   }
 })
 
-hook.before('save', function addTimestamps (record) {
+hookCollection.before('save', function addTimestamps (record) {
   if (!record.type) {
     throw new Error('type property is required')
   }
@@ -188,19 +261,19 @@ hook.before('save', function addTimestamps (record) {
 Defining multiple hooks is helpful if you have similar methods for which you want to define separate hooks, but also an additional hook that gets called for all at once. The example above is equal to this:
 
 ```js
-hook('add', record, function (record) {
-  return hook('save', record, function (record) {
+hookCollection('add', record, function (record) {
+  return hookCollection('save', record, function (record) {
     return store.save(record)
   })
 })
 ```
 
-### hook.before()
+### hookCollection.before()
 
-Add before hook for given name. Returns `hook` instance for chaining.
+Add before hook for given name. Returns `hookCollection` instance for chaining.
 
 ```js
-hook.before(name, method)
+hookCollection.before(name, method)
 ```
 
 <table>
@@ -233,19 +306,19 @@ hook.before(name, method)
 Example
 
 ```js
-hook.before('save', function validate (record) {
+hookCollection.before('save', function validate (record) {
   if (!record.name) {
     throw new Error('name property is required')
   }
 })
 ```
 
-### hook.error()
+### hookCollection.error()
 
-Add error hook for given name. Returns `hook` instance for chaining.
+Add error hook for given name. Returns `hookCollection` instance for chaining.
 
 ```js
-hook.error(name, method)
+hookCollection.error(name, method)
 ```
 
 <table>
@@ -280,18 +353,18 @@ hook.error(name, method)
 Example
 
 ```js
-hook.error('save', function (error, options) {
+hookCollection.error('save', function (error, options) {
   if (error.ignore) return
   throw error
 })
 ```
 
-### hook.after()
+### hookCollection.after()
 
 Add after hook for given name. Returns `hook` instance for chaining.
 
 ```js
-hook.after(name, method)
+hookCollection.after(name, method)
 ```
 
 <table>
@@ -323,7 +396,7 @@ hook.after(name, method)
 Example
 
 ```js
-hook.after('save', function (result, options) {
+hookCollection.after('save', function (result, options) {
   if (result.updatedAt) {
     app.emit('update', result)
   } else {
@@ -332,12 +405,12 @@ hook.after('save', function (result, options) {
 })
 ```
 
-### hook.wrap()
+### hookCollection.wrap()
 
-Add wrap hook for given name. Returns `hook` instance for chaining.
+Add wrap hook for given name. Returns `hookCollection` instance for chaining.
 
 ```js
-hook.wrap(name, method)
+hookCollection.wrap(name, method)
 ```
 
 <table>
@@ -368,7 +441,7 @@ hook.wrap(name, method)
 Example
 
 ```js
-hook.wrap('save', async function (saveInDatabase, options) {
+hookCollection.wrap('save', async function (saveInDatabase, options) {
   if (!record.name) {
     throw new Error('name property is required')
   }
@@ -392,12 +465,12 @@ hook.wrap('save', async function (saveInDatabase, options) {
 
 See also: [Test mock example](examples/test-mock-example.md)
 
-### hook.remove()
+### hookCollection.remove()
 
-Removes hook for given name. Returns `hook` instance for chaining.
+Removes hook for given name. Returns `hookCollection` instance for chaining.
 
 ```js
-hook.remove(name, hookMethod)
+hookCollection.remove(name, hookMethod)
 ```
 
 <table>
@@ -419,7 +492,7 @@ hook.remove(name, hookMethod)
     <th align="left"><code>beforeHookMethod</code></th>
     <td>Function</td>
     <td>
-      Same function that was previously passed to <code>hook.before()</code>, <code>hook.error()</code>, <code>hook.after()</code> or <code>hook.wrap()</code>
+      Same function that was previously passed to <code>hookCollection.before()</code>, <code>hookCollection.error()</code>, <code>hookCollection.after()</code> or <code>hookCollection.wrap()</code>
     </td>
     <td>Yes</td>
   </tr>
@@ -428,8 +501,62 @@ hook.remove(name, hookMethod)
 Example
 
 ```js
-hook.remove('save', validateRecord)
+hookCollection.remove('save', validateRecord)
 ```
+
+## TypeScript
+
+This library contains type definitions for TypeScript. When you use TypeScript we highly recommend using the `Hook.Singular` constructor for your hooks as this allows you to pass along type information for the options object. For example:
+
+```ts
+
+import {Hook} from 'before-after-hook'
+
+interface Foo {
+  bar: string
+  num: number;
+}
+
+const hook = new Hook.Singular<Foo>();
+
+hook.before(function (foo) {
+
+  // typescript will complain about the following mutation attempts
+  foo.hello = 'world'
+  foo.bar = 123
+
+  // yet this is valid
+  foo.bar = 'other-string'
+  foo.num = 123
+})
+
+const foo = hook({bar: 'random-string'}, function(foo) {
+  // handle `foo`
+  foo.bar = 'another-string'
+})
+
+// foo outputs
+{
+  bar: 'another-string',
+  num: 123
+}
+```
+
+An alternative import:
+```ts
+import {Singular, Collection} from 'before-after-hook'
+
+const hook = new Singular<{foo: string}>();
+const hookCollection = new Collection();
+```
+
+## Upgrading to 1.4
+
+Since version 1.4 the `Hook` constructor has been deprecated in favor of returning `Hook.Singular` in the next major release. 
+
+Version 1.4 is still 100% backwards-compatible, but if you want to continue using hook collections, we recommend using the `Hook.Collection` constructor instead before the next release.
+
+For even more details, check out [the PR](https://github.com/gr2m/before-after-hook/pull/52).
 
 ## See also
 
