@@ -552,7 +552,7 @@ const hookCollection = new Collection();
 
 ## Upgrading to 1.4
 
-Since version 1.4 the `Hook` constructor has been deprecated in favor of becoming a singleton in the next major release. 
+Since version 1.4 the `Hook` constructor has been deprecated in favor of returning `Hook.Singular` in the next major release. 
 
 Version 1.4 is still 100% backwards-compatible, but if you want to continue using hook collections, we recommend using the `Hook.Collection` constructor instead before the next release.
 
