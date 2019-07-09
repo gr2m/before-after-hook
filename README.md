@@ -12,13 +12,14 @@
 ### Singular hook
 
 Recommended for [TypeScript](#typescript)
+
 ```js
 // instantiate singular hook API
 const hook = new Hook.Singular()
 
 // Create a hook
 function getData (options) {
-  return hook(options, fetchFromDatabase)
+  return hook(fetchFromDatabase, options)
     .then(handleData)
     .catch(handleGetError)
 }
@@ -39,7 +40,7 @@ const hookCollection = new Hook.Collection()
 
 // Create a hook
 function getData (options) {
-  return hookCollection('get', options, fetchFromDatabase)
+  return hookCollection('get', fetchFromDatabase, options)
     .then(handleData)
     .catch(handleGetError)
 }
@@ -136,12 +137,12 @@ const hook = new Hook.Singular()
 // good
 hook.before(beforeHook)
 hook.after(afterHook)
-hook(options, fetchFromDatabase)
+hook(fetchFromDatabase, options)
 
 // bad
 hook.before('get', beforeHook)
 hook.after('get', afterHook)
-hook('get', options, fetchFromDatabase)
+hook('get', fetchFromDatabase, options)
 ```
 
 ## Hook collection API
@@ -181,7 +182,7 @@ That way you don’t need to expose the [hookCollection()](#hookcollection) meth
 Invoke before and after hooks. Returns a promise.
 
 ```js
-hookCollection(nameOrNames, [options,] method)
+hookCollection(nameOrNames, method /*, options */)
 ```
 
 <table>
@@ -200,16 +201,16 @@ hookCollection(nameOrNames, [options,] method)
     <td>Yes</td>
   </tr>
   <tr>
-    <th align="left"><code>options</code></th>
-    <td>Object</td>
-    <td>Will be passed to all before hooks as reference, so they can mutate it</td>
-    <td>No, defaults to empty object (<code>{}</code>)</td>
-  </tr>
-  <tr>
     <th align="left"><code>method</code></th>
     <td>Function</td>
     <td>Callback to be executed after all before hooks finished execution successfully. <code>options</code> is passed as first argument</td>
     <td>Yes</td>
+  </tr>
+  <tr>
+    <th align="left"><code>options</code></th>
+    <td>Object</td>
+    <td>Will be passed to all before hooks as reference, so they can mutate it</td>
+    <td>No, defaults to empty object (<code>{}</code>)</td>
   </tr>
 </table>
 
@@ -223,10 +224,10 @@ Rejects with error that is thrown or rejected with by
 Simple Example
 
 ```js
-hookCollection('save', record, function (record) {
+hookCollection('save', function (record) {
   return store.save(record)
-})
-// shorter:  hookCollection('save', record, store.save)
+}, record)
+// shorter:  hookCollection('save', store.save, record)
 
 hookCollection.before('save', function addTimestamps (record) {
   const now = new Date().toISOString()
@@ -241,9 +242,9 @@ hookCollection.before('save', function addTimestamps (record) {
 Example defining multiple hooks at once.
 
 ```js
-hookCollection(['add', 'save'], record, function (record) {
+hookCollection(['add', 'save'], function (record) {
   return store.save(record)
-})
+}, record)
 
 hookCollection.before('add', function addTimestamps (record) {
   if (!record.type) {
@@ -261,11 +262,11 @@ hookCollection.before('save', function addTimestamps (record) {
 Defining multiple hooks is helpful if you have similar methods for which you want to define separate hooks, but also an additional hook that gets called for all at once. The example above is equal to this:
 
 ```js
-hookCollection('add', record, function (record) {
-  return hookCollection('save', record, function (record) {
+hookCollection('add', function (record) {
+  return hookCollection('save', function (record) {
     return store.save(record)
-  })
-})
+  }, record)
+}, record)
 ```
 
 ### hookCollection.before()
@@ -530,10 +531,10 @@ hook.before(function (foo) {
   foo.num = 123
 })
 
-const foo = hook({bar: 'random-string'}, function(foo) {
+const foo = hook(function(foo) {
   // handle `foo`
   foo.bar = 'another-string'
-})
+}, {bar: 'random-string'})
 
 // foo outputs
 {
@@ -543,6 +544,7 @@ const foo = hook({bar: 'random-string'}, function(foo) {
 ```
 
 An alternative import:
+
 ```ts
 import {Singular, Collection} from 'before-after-hook'
 
@@ -552,7 +554,7 @@ const hookCollection = new Collection();
 
 ## Upgrading to 1.4
 
-Since version 1.4 the `Hook` constructor has been deprecated in favor of returning `Hook.Singular` in the next major release. 
+Since version 1.4 the `Hook` constructor has been deprecated in favor of returning `Hook.Singular` in an upcoming breaking release. 
 
 Version 1.4 is still 100% backwards-compatible, but if you want to continue using hook collections, we recommend using the `Hook.Collection` constructor instead before the next release.
 
