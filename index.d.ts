@@ -7,7 +7,7 @@ declare module "before-after-hook" {
     /**
      * Invoke before and after hooks.
      */
-    (name: string | string[], options: any, method: (options: any) => Promise<any> | any): Promise<any>
+    (name: string | string[], method: (options: any) => Promise<any> | any, options: any): Promise<any>
     /**
      * Add before hook for given name. Returns `hook` instance for chaining.
      */
@@ -42,11 +42,11 @@ declare module "before-after-hook" {
     /**
      * Invoke before and after hooks with options
      */
-    (options: T, method: (options: T) => T | null | void): Promise<T>
+    (method: (options: T) => T | null | void, options: T): Promise<T>
     /**
      * Invoke before and after hooks with options
      */
-    (options: T, method: (options: T) => Promise<T | null | void>): Promise<T>
+    (method: (options: T) => Promise<T | null | void>, options: T): Promise<T>
 
     /**
      * Add before hook. Returns `UnnamedHook` instance for chaining.
