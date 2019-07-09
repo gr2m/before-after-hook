@@ -114,7 +114,7 @@ test('hook.error("test", handleError)', function (group) {
       throw error
     })
 
-    hook('test', { optionFoo: 'bar' }, method)
+    hook('test', method, { optionFoo: 'bar' })
 
       .catch(function (error) {
         t.equal(error.message, 'oops')
