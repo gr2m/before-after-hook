@@ -91,12 +91,12 @@ test('hook.before("test", check)', function (group) {
       options.baz = 'ar'
     })
 
-    hook('test', { foo: 'notbar', otherbar: 'baz' }, function (options) {
+    hook('test', function (options) {
       t.equal(options.foo, 'bar')
       t.equal(options.baz, 'ar')
       t.equal(options.otherbar, 'baz')
       t.end()
-    })
+    }, { foo: 'notbar', otherbar: 'baz' })
 
       .catch(t.error)
   })

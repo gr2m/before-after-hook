@@ -90,12 +90,12 @@ test('hook.after("test", afterCheck)', function (group) {
       result.baz = 'ar'
     })
 
-    hook('test', { optionFoo: 'bar' }, function () {
+    hook('test', function () {
       return {
         foo: 'bar',
         otherFoo: 'bar'
       }
-    })
+    }, { optionFoo: 'bar' })
 
       .then(function (result) {
         t.equal(result.foo, 'newbar')

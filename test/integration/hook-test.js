@@ -55,10 +55,10 @@ test('hook(name, options, method)', function (group) {
     var hook = new Hook()
     var options = { foo: 'bar' }
 
-    hook('test', options, function (_options) {
+    hook('test', function (_options) {
       t.deepLooseEqual(options, _options)
       t.end()
-    })
+    }, options)
   })
 
   group.end()
