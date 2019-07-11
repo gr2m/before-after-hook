@@ -1,40 +1,38 @@
 type HookMethod<O = any, R = any> = (options: O) => R | Promise<R>
 
-type SingularBeforeHook<O> = (options: O) => void
-type SingularErrorHook<O> = (error: any, options: O) => void
-type SingularAfterHook<O, R> = (result: R, options: O) => void
-type SingularWrapHook<O, R> = (hookMethod: HookMethod<O, R>, options: O) => R | Promise<R>
+type BeforeHook<O> = (options: O) => void
+type ErrorHook<O> = (error: any, options: O) => void
+type AfterHook<O, R> = (result: R, options: O) => void
+type WrapHook<O, R> = (hookMethod: HookMethod<O, R>, options: O) => R | Promise<R>
+
+type AnyHook<O, R> = BeforeHook<O> | ErrorHook<O> | AfterHook<O, R> | WrapHook<O, R>
 
 declare module "before-after-hook" {
   export interface HookCollection {
     /**
-     * Invoke before and after hooks.
+     * Invoke before and after hooks
      */
-    (name: string | string[], method: (options: any) => Promise<any> | any): Promise<any>
+    (name: string | string[], hookMethod: HookMethod, options?: any): Promise<any>
     /**
-     * Invoke before and after hooks.
+     * Add `before` hook for given `name`
      */
-    (name: string | string[], method: (options: any) => Promise<any> | any, options: any): Promise<any>
+    before(name: string, beforeHook: BeforeHook<any>): void
     /**
-     * Add before hook for given name. Returns `hook` instance for chaining.
+     * Add `error` hook for given `name`
      */
-    before (name: string, method: (options: any) => Promise<any> | any): HookCollection
+    error(name: string, errorHook: ErrorHook<any>): void
     /**
-     * Add error hook for given name. Returns `hook` instance for chaining.
+     * Add `after` hook for given `name`
      */
-    error (name: string, method: (options: any) => Promise<any> | any): HookCollection
+    after(name: string, afterHook: AfterHook<any, any>): void
     /**
-     * Add after hook for given name. Returns `hook` instance for chaining.
+     * Add `wrap` hook for given `name`
      */
-    after (name: string, method: (options: any) => Promise<any> | any): HookCollection
+    wrap(name: string, wrapHook: WrapHook<any, any>): void
     /**
-     * Add wrap hook for given name. Returns `hook` instance for chaining.
+     * Remove added hook for given `name`
      */
-    wrap (name: string, method: (options: any) => Promise<any> | any): HookCollection
-    /**
-     * Removes hook for given name. Returns `hook` instance for chaining.
-     */
-    remove (name: string, beforeHookMethod: (options: any) => Promise<any> | any): HookCollection
+    remove(name: string, hook: AnyHook<any, any>): void
   }
 
   export interface HookSingular<O, R> {
@@ -42,33 +40,26 @@ declare module "before-after-hook" {
      * Invoke before and after hooks
      */
     (hookMethod: HookMethod<O, R>, options?: O): Promise<R>
-
     /**
      * Add `before` hook
      */
-    before(beforeHook: SingularBeforeHook<O>): void;
-
+    before(beforeHook: BeforeHook<O>): void;
     /**
      * Add `error` hook
      */
-    error(errorHook: SingularErrorHook<O>): void;
-
+    error(errorHook: ErrorHook<O>): void;
     /**
      * Add `after` hook
      */
-    after(afterHook: SingularAfterHook<O, R>): void;
-
+    after(afterHook: AfterHook<O, R>): void;
     /**
      * Add `wrap` hook
      */
-    wrap(wrapHook: SingularWrapHook<O, R>): void;
-
+    wrap(wrapHook: WrapHook<O, R>): void;
     /**
      * Remove added hook
      */
-    remove(
-      hook: SingularBeforeHook<O> | SingularErrorHook<O> | SingularAfterHook<O, R> | SingularWrapHook<O, R>
-    ): void;
+    remove(hook: AnyHook<O, R>): void;
   }
 
   export const Hook: {
