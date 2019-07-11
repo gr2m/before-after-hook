@@ -34,71 +34,41 @@ declare module "before-after-hook" {
     /**
      * Invoke before and after hooks
      */
-    (method: (options: T) => void | T | Promise<void | T>, options?: T): Promise<T>
+    (hookMethod: (options: T) => void | T | Promise<void | T>, options?: T): Promise<T>
 
     /**
      * Add before hook. Returns `UnnamedHook` instance for chaining.
      */
     before(
-      beforeFn: (options: T) => T | null | void
-    ): HookSingular<T>;
-    /**
-     * Add before hook. Returns `UnnamedHook` instance for chaining.
-     */
-    before(
-      beforeFn: (options: T) => Promise<T | null | void>
+      beforeHook: (options: T) => void | T | Promise<void | T>
     ): HookSingular<T>;
 
     /**
      * Add error hook. Returns `UnnamedHook` instance for chaining.
      */
     error(
-      errorFn: (options: T) => T | null | void
-    ): HookSingular<T>;
-    /**
-     * Add error hook. Returns `UnnamedHook` instance for chaining.
-     */
-    error(
-      errorFn: (options: T) => Promise<T | null | void>
+      errorHook: (options: T) => void | T | Promise<void | T>
     ): HookSingular<T>;
 
     /**
      * Add after hook. Returns `UnnamedHook` instance for chaining.
      */
     after(
-      afterFn: (options: T) => T | null | void
-    ): HookSingular<T>;
-    /**
-     * Add after hook. Returns `UnnamedHook` instance for chaining.
-     */
-    after(
-      afterFn: (options: T) => Promise<T | null | void>
+      afterHook: (options: T) => void | T | Promise<void | T>
     ): HookSingular<T>;
 
     /**
      * Add wrap hook. Returns `UnnamedHook` instance for chaining.
      */
     wrap(
-      wrapFn: (options: T) => T | null | void
-    ): HookSingular<T>;
-    /**
-     * Add wrap hook. Returns `UnnamedHook` instance for chaining.
-     */
-    wrap(
-      wrapFn: (options: T) => Promise<T | null | void>
+      wrapHook: (options: T) => void | T | Promise<void | T>
     ): HookSingular<T>;
 
     /**
      * Removes hook. Returns `UnnamedHook` instance for chaining.
      */
     remove(
-      beforeHookMethod: (options: T) => T | null | void
-    ): HookSingular<T>;
-    /**
-     * Removes hook. Returns `UnnamedHook` instance for chaining.
-     */
-    remove(
-      beforeHookMethod: (options: T) => Promise<T | null | void>
+      hookMethod: (options: T) => void | T | Promise<void | T>
     ): HookSingular<T>;
   }
 
