@@ -44,39 +44,31 @@ declare module "before-after-hook" {
     (hookMethod: HookMethod<O, R>, options?: O): Promise<R>
 
     /**
-     * Add before hook. Returns `UnnamedHook` instance for chaining.
+     * Add `before` hook
      */
-    before(
-      beforeHook: SingularBeforeHook<O>
-    ): HookSingular<O, R>;
+    before(beforeHook: SingularBeforeHook<O>): void;
 
     /**
-     * Add error hook. Returns `UnnamedHook` instance for chaining.
+     * Add `error` hook
      */
-    error(
-      errorHook: SingularErrorHook<O>
-    ): HookSingular<O, R>;
+    error(errorHook: SingularErrorHook<O>): void;
 
     /**
-     * Add after hook. Returns `UnnamedHook` instance for chaining.
+     * Add `after` hook
      */
-    after(
-      afterHook: SingularAfterHook<O, R>
-    ): HookSingular<O, R>;
+    after(afterHook: SingularAfterHook<O, R>): void;
 
     /**
-     * Add wrap hook. Returns `UnnamedHook` instance for chaining.
+     * Add `wrap` hook
      */
-    wrap(
-      wrapHook: SingularWrapHook<O, R>
-    ): HookSingular<O, R>;
+    wrap(wrapHook: SingularWrapHook<O, R>): void;
 
     /**
-     * Removes hook. Returns `UnnamedHook` instance for chaining.
+     * Remove added hook
      */
     remove(
       hook: SingularBeforeHook<O> | SingularErrorHook<O> | SingularAfterHook<O, R> | SingularWrapHook<O, R>
-    ): HookSingular<O, R>;
+    ): void;
   }
 
   export const Hook: {
