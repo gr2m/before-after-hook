@@ -14,6 +14,7 @@
     "postbuild": "uglifyjs dist/before-after-hook.js -mc > dist/before-after-hook.min.js",
     "pretest": "standard",
     "test": "npm run -s test:node | tap-spec",
+    "posttest": "npm run validate:ts",
     "test:node": "node test",
     "test:watch": "gaze 'clear && node test | tap-min' 'test/**/*.js' 'index.js' 'lib/**/*.js'",
     "test:coverage": "istanbul cover test",
