@@ -120,7 +120,7 @@ declare module "before-after-hook" {
     /**
      * Creates a nameless hook that allows passing down typings for the options
      */
-    Singular: {new <T>(): HookSingular<T>}
+    Singular: {new <T = any>(): HookSingular<T>}
 
     /**
      * Creates a hook collection
@@ -128,7 +128,7 @@ declare module "before-after-hook" {
     Collection: {new (): HookCollection}
   }
 
-  export const Singular: {new <T>(): HookSingular<T>}
+  export const Singular: {new <T = any>(): HookSingular<T>}
   export const Collection: {new (): HookCollection}
 
   export = Hook
