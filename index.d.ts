@@ -1,16 +1,16 @@
 type HookMethod<O, R> = (options: O) => R | Promise<R>
 
 type BeforeHook<O> = (options: O) => void
-type ErrorHook<O> = (error: any, options: O) => void
+type ErrorHook<O, E> = (error: E, options: O) => void
 type AfterHook<O, R> = (result: R, options: O) => void
 type WrapHook<O, R> = (
   hookMethod: HookMethod<O, R>,
   options: O
 ) => R | Promise<R>
 
-type AnyHook<O, R> =
+type AnyHook<O, R, E> =
   | BeforeHook<O>
-  | ErrorHook<O>
+  | ErrorHook<O, E>
   | AfterHook<O, R>
   | WrapHook<O, R>
 
@@ -30,7 +30,7 @@ export interface HookCollection {
   /**
    * Add `error` hook for given `name`
    */
-  error(name: string, errorHook: ErrorHook<any>): void
+  error(name: string, errorHook: ErrorHook<any, any>): void
   /**
    * Add `after` hook for given `name`
    */
@@ -42,10 +42,10 @@ export interface HookCollection {
   /**
    * Remove added hook for given `name`
    */
-  remove(name: string, hook: AnyHook<any, any>): void
+  remove(name: string, hook: AnyHook<any, any, any>): void
 }
 
-export interface HookSingular<O, R> {
+export interface HookSingular<O, R, E> {
   /**
    * Invoke before and after hooks
    */
@@ -57,7 +57,7 @@ export interface HookSingular<O, R> {
   /**
    * Add `error` hook
    */
-  error(errorHook: ErrorHook<O>): void
+  error(errorHook: ErrorHook<O, E>): void
   /**
    * Add `after` hook
    */
@@ -69,11 +69,11 @@ export interface HookSingular<O, R> {
   /**
    * Remove added hook
    */
-  remove(hook: AnyHook<O, R>): void
+  remove(hook: AnyHook<O, R, E>): void
 }
 
 type Collection = new () => HookCollection
-type Singular = new <O = any, R = any>() => HookSingular<O, R>
+type Singular = new <O = any, R = any, E = any>() => HookSingular<O, R, E>
 
 interface Hook {
   new (): HookCollection
