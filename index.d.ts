@@ -32,21 +32,9 @@ declare module "before-after-hook" {
 
   export interface HookSingular<T> {
     /**
-     * Invoke before and after hooks without options
+     * Invoke before and after hooks
      */
-    (method: (options: T) => T | null | void): Promise<T>
-    /**
-     * Invoke before and after hooks without options
-     */
-    (method: (options: T) => Promise<T | null | void>): Promise<T>
-    /**
-     * Invoke before and after hooks with options
-     */
-    (method: (options: T) => T | null | void, options: T): Promise<T>
-    /**
-     * Invoke before and after hooks with options
-     */
-    (method: (options: T) => Promise<T | null | void>, options: T): Promise<T>
+    (method: (options: T) => void | T | Promise<void | T>, options?: T): Promise<T>
 
     /**
      * Add before hook. Returns `UnnamedHook` instance for chaining.
