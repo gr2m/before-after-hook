@@ -14,7 +14,7 @@ type AnyHook<O, R> =
   | AfterHook<O, R>
   | WrapHook<O, R>
 
-interface HookCollection {
+export interface HookCollection {
   /**
    * Invoke before and after hooks
    */
@@ -45,7 +45,7 @@ interface HookCollection {
   remove(name: string, hook: AnyHook<any, any>): void
 }
 
-interface HookSingular<O, R> {
+export interface HookSingular<O, R> {
   /**
    * Invoke before and after hooks
    */
