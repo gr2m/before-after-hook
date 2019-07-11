@@ -1,3 +1,10 @@
+type HookMethod<O = any, R = any> = (options: O) => R | Promise<R>
+
+type SingularBeforeHook<O> = (options: O) => void
+type SingularErrorHook<O> = (error: any, options: O) => void
+type SingularAfterHook<O, R> = (result: R, options: O) => void
+type SingularWrapHook<O, R> = (hookMethod: HookMethod<O, R>, options: O) => R | Promise<R>
+
 declare module "before-after-hook" {
   export interface HookCollection {
     /**
@@ -30,46 +37,46 @@ declare module "before-after-hook" {
     remove (name: string, beforeHookMethod: (options: any) => Promise<any> | any): HookCollection
   }
 
-  export interface HookSingular<T> {
+  export interface HookSingular<O, R> {
     /**
      * Invoke before and after hooks
      */
-    (hookMethod: (options: T) => void | T | Promise<void | T>, options?: T): Promise<T>
+    (hookMethod: HookMethod<O, R>, options?: O): Promise<R>
 
     /**
      * Add before hook. Returns `UnnamedHook` instance for chaining.
      */
     before(
-      beforeHook: (options: T) => void | T | Promise<void | T>
-    ): HookSingular<T>;
+      beforeHook: SingularBeforeHook<O>
+    ): HookSingular<O, R>;
 
     /**
      * Add error hook. Returns `UnnamedHook` instance for chaining.
      */
     error(
-      errorHook: (options: T) => void | T | Promise<void | T>
-    ): HookSingular<T>;
+      errorHook: SingularErrorHook<O>
+    ): HookSingular<O, R>;
 
     /**
      * Add after hook. Returns `UnnamedHook` instance for chaining.
      */
     after(
-      afterHook: (options: T) => void | T | Promise<void | T>
-    ): HookSingular<T>;
+      afterHook: SingularAfterHook<O, R>
+    ): HookSingular<O, R>;
 
     /**
      * Add wrap hook. Returns `UnnamedHook` instance for chaining.
      */
     wrap(
-      wrapHook: (options: T) => void | T | Promise<void | T>
-    ): HookSingular<T>;
+      wrapHook: SingularWrapHook<O, R>
+    ): HookSingular<O, R>;
 
     /**
      * Removes hook. Returns `UnnamedHook` instance for chaining.
      */
     remove(
-      hookMethod: (options: T) => void | T | Promise<void | T>
-    ): HookSingular<T>;
+      hook: SingularBeforeHook<O> | SingularErrorHook<O> | SingularAfterHook<O, R> | SingularWrapHook<O, R>
+    ): HookSingular<O, R>;
   }
 
   export const Hook: {
@@ -78,7 +85,7 @@ declare module "before-after-hook" {
     /**
      * Creates a nameless hook that allows passing down typings for the options
      */
-    Singular: {new <T = any>(): HookSingular<T>}
+    Singular: {new <O = any, R = any>(): HookSingular<O, R>}
 
     /**
      * Creates a hook collection
@@ -86,7 +93,7 @@ declare module "before-after-hook" {
     Collection: {new (): HookCollection}
   }
 
-  export const Singular: {new <T = any>(): HookSingular<T>}
+  export const Singular: {new <O = any, R = any>(): HookSingular<O, R>}
   export const Collection: {new (): HookCollection}
 
   export = Hook
