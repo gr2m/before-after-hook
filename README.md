@@ -271,7 +271,7 @@ hookCollection('add', function (record) {
 
 ### hookCollection.before()
 
-Add before hook for given name. Returns `hookCollection` instance for chaining.
+Add before hook for given name.
 
 ```js
 hookCollection.before(name, method)
@@ -316,7 +316,7 @@ hookCollection.before('save', function validate (record) {
 
 ### hookCollection.error()
 
-Add error hook for given name. Returns `hookCollection` instance for chaining.
+Add error hook for given name.
 
 ```js
 hookCollection.error(name, method)
@@ -362,7 +362,7 @@ hookCollection.error('save', function (error, options) {
 
 ### hookCollection.after()
 
-Add after hook for given name. Returns `hook` instance for chaining.
+Add after hook for given name.
 
 ```js
 hookCollection.after(name, method)
@@ -408,7 +408,7 @@ hookCollection.after('save', function (result, options) {
 
 ### hookCollection.wrap()
 
-Add wrap hook for given name. Returns `hookCollection` instance for chaining.
+Add wrap hook for given name.
 
 ```js
 hookCollection.wrap(name, method)
@@ -468,7 +468,7 @@ See also: [Test mock example](examples/test-mock-example.md)
 
 ### hookCollection.remove()
 
-Removes hook for given name. Returns `hookCollection` instance for chaining.
+Removes hook for given name.
 
 ```js
 hookCollection.remove(name, hookMethod)
