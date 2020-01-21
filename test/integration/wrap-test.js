@@ -142,5 +142,28 @@ test('hook.wrap("test", wrapMethod)', function(group) {
       .catch(t.error);
   });
 
+  group.test(
+    "method properties remain intact across multiple hook.wrap calls",
+    function(t) {
+      var hook = new Hook();
+      var myMethod = Object.assign(function() {}, { foo: "bar" });
+
+      hook.wrap("test", function(method) {
+        t.is(myMethod.foo, "bar");
+
+        method();
+      });
+      hook.wrap("test", function(method) {
+        t.is(method.foo, "bar");
+
+        method();
+      });
+
+      hook("test", myMethod).then(function() {
+        t.end();
+      });
+    }
+  );
+
   group.end();
 });
