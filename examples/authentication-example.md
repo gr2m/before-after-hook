@@ -8,8 +8,8 @@ This example shows how an imaginary `authentication` API with methods to manage 
 The authentication APIs to create a user account and a session look as follows
 
 ```js
-authentication.accounts.add(properties)
-authentication.sessions.add(credentials)
+authentication.accounts.add(properties);
+authentication.sessions.add(credentials);
 ```
 
 The exposed hooks could be
@@ -25,7 +25,7 @@ The implementation of the hooks could look like this:
 function createUserAccount (properties) {
   return hook('registration', properties, function (properties) (
     return accountDatabase.create(properties)
-  ))  
+  ))
 }
 function createSession (account, credentials) {
   var options = {account: account, credentials: credentials}
@@ -47,13 +47,13 @@ function createSession (account, credentials) {
 Say we want to enforce that username must be valid email addresses.
 
 ```js
-authentication.hook.before('registration', function (properties) {
+authentication.hook.before("registration", function(properties) {
   if (!isValidEmail(properties.username)) {
-    throw new Error(properties.username + 'is not a valid email address')
+    throw new Error(properties.username + "is not a valid email address");
   }
 
-  properties.username = properties.username.toLowerCase()
-})
+  properties.username = properties.username.toLowerCase();
+});
 ```
 
 ## Implement email verification flow
@@ -61,9 +61,9 @@ authentication.hook.before('registration', function (properties) {
 Say we do not want to allow users to sign in to their account until their email was verified. Once verified, we set a `verifiedAt` timestamp.
 
 ```js
-authentication.hook.before('login', function (options) {
+authentication.hook.before("login", function(options) {
   if (!options.account.verifiedAt) {
-    throw new Error('You must verify your email address before signing in')
+    throw new Error("You must verify your email address before signing in");
   }
-})
+});
 ```

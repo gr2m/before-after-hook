@@ -1,2 +1,2 @@
-require('./register-test')
-require('./remove-test')
+require("./register-test");
+require("./remove-test");

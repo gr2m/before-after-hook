@@ -1,15 +1,15 @@
 # Test mock example
 
-This example shows how a REST API client can implement mocking for simple  testing.
+This example shows how a REST API client can implement mocking for simple testing.
 
 Let’s say the client has methods to get/list/create/update/delete todos.
 
 ```js
-client.getTodo(id)
-client.listTodos()
-client.createTodo(options)
-client.updateTodo(options)
-client.deleteTodo(id)
+client.getTodo(id);
+client.listTodos();
+client.createTodo(options);
+client.updateTodo(options);
+client.deleteTodo(id);
 ```
 
 The exposed hook is called `request`.
@@ -24,7 +24,7 @@ function request (options) {
   return hook('request', options, function (options) (
     const {url, ...fetchOptions} = options
     return fetch(url, fetchOptions)
-  ))  
+  ))
 }
 ```
 
@@ -33,13 +33,13 @@ an HTTP request to be even sent, instead we test if the options passed `fetch`
 are what we expect.
 
 ```js
-test('client.getTodo(123)', () => {
-  const client = getClient()
-  client.hook.wrap('request', (fetch, options) => {
-    assert.equal(options.method, 'GET')
-    assert.equal(options.url, 'https://api.acme-inc.com/todos/123')
-  })
+test("client.getTodo(123)", () => {
+  const client = getClient();
+  client.hook.wrap("request", (fetch, options) => {
+    assert.equal(options.method, "GET");
+    assert.equal(options.url, "https://api.acme-inc.com/todos/123");
+  });
 
-  client.getTodo(123)
-})
+  client.getTodo(123);
+});
 ```
