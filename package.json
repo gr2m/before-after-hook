@@ -47,7 +47,7 @@
     "gaze-cli": "^0.2.0",
     "istanbul": "^0.4.0",
     "istanbul-coveralls": "^1.0.3",
-    "mkdirp": "^0.5.1",
+    "mkdirp": "^1.0.0",
     "prettier": "^1.19.1",
     "rimraf": "^3.0.0",
     "semantic-release": "^16.0.0",
