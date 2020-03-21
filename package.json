@@ -48,7 +48,7 @@
     "istanbul": "^0.4.0",
     "istanbul-coveralls": "^1.0.3",
     "mkdirp": "^1.0.3",
-    "prettier": "^1.19.1",
+    "prettier": "^2.0.0",
     "rimraf": "^3.0.0",
     "semantic-release": "^17.0.0",
     "simple-mock": "^0.8.0",
