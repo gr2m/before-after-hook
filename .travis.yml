@@ -19,8 +19,7 @@ stages:
 jobs:
   include:
     - stage: test
-      node_js: 8
-    - node_js: 10
+      node_js: 10
       script: npm ci
     - node_js: 12
       script: npm ci
