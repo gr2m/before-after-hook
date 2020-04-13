@@ -21,13 +21,13 @@ store.remove(id);
 The exposed hooks could be
 
 - `add`  
-  invoked when a document gets added
+  invokedwhenadocumentgetsadded
 - `update`  
-  invoked when a document gets added
+  invokedwhenadocumentgetsadded
 - `remove`  
-  invoked when a document gets added
+  invokedwhenadocumentgetsadded
 - `save`  
-  invoked each time a document gets saved within the hooks listed above.
+  invokedeachtimeadocumentgetssavedwithinthehookslistedabove.
 
 The implementation of the hooks could look like this:
 
@@ -55,7 +55,7 @@ documents with a `type` property altogether. We also want to make sure that
 each `item` has a `listId` property
 
 ```js
-store.hook.before("save", function(doc) {
+store.hook.before("save", function (doc) {
   if (!doc.type) {
     throw new Error("type property is required");
   }
@@ -88,12 +88,12 @@ store.add({ type: "item", listId: "id34567", note: "Remember the milk!" });
 ## timestamps and user reference
 
 ```js
-store.hook.before("add", function(doc) {
+store.hook.before("add", function (doc) {
   doc.createdAt = new Date().toISOString();
   doc.createdBy = app.currentUser.id;
   return doc;
 });
-store.hook.before("update", function(doc) {
+store.hook.before("update", function (doc) {
   doc.updatedAt = new Date().toISOString();
   doc.updatedBy = app.currentUser.id;
   return doc;
@@ -103,13 +103,13 @@ store.hook.before("update", function(doc) {
 ## events
 
 ```js
-store.hook.after("add", function(doc) {
+store.hook.after("add", function (doc) {
   app.emit("data:" + doc.type + ":add", doc);
 });
-store.hook.after("update", function(doc) {
+store.hook.after("update", function (doc) {
   app.emit("data:" + doc.type + ":update", doc);
 });
-store.hook.after("remove", function(doc) {
+store.hook.after("remove", function (doc) {
   app.emit("data:" + doc.type + ":remove", doc);
 });
 ```

@@ -229,7 +229,7 @@ Simple Example
 ```js
 hookCollection(
   "save",
-  function(record) {
+  function (record) {
     return store.save(record);
   },
   record
@@ -251,7 +251,7 @@ Example defining multiple hooks at once.
 ```js
 hookCollection(
   ["add", "save"],
-  function(record) {
+  function (record) {
     return store.save(record);
   },
   record
@@ -275,10 +275,10 @@ Defining multiple hooks is helpful if you have similar methods for which you wan
 ```js
 hookCollection(
   "add",
-  function(record) {
+  function (record) {
     return hookCollection(
       "save",
-      function(record) {
+      function (record) {
         return store.save(record);
       },
       record
@@ -373,7 +373,7 @@ hookCollection.error(name, method);
 Example
 
 ```js
-hookCollection.error("save", function(error, options) {
+hookCollection.error("save", function (error, options) {
   if (error.ignore) return;
   throw error;
 });
@@ -416,7 +416,7 @@ hookCollection.after(name, method);
 Example
 
 ```js
-hookCollection.after("save", function(result, options) {
+hookCollection.after("save", function (result, options) {
   if (result.updatedAt) {
     app.emit("update", result);
   } else {
@@ -461,7 +461,7 @@ hookCollection.wrap(name, method);
 Example
 
 ```js
-hookCollection.wrap("save", async function(saveInDatabase, options) {
+hookCollection.wrap("save", async function (saveInDatabase, options) {
   if (!record.name) {
     throw new Error("name property is required");
   }

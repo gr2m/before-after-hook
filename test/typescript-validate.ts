@@ -14,12 +14,12 @@ type Options = {
 
 const options: Options = {
   everything: 42,
-  nothing: 0
+  nothing: 0,
 };
 
 const hookMethod = (options: Options): number => {
   const sumOfNumbers = Object.keys(options)
-    .map(key => options[key])
+    .map((key) => options[key])
     .filter((v): v is number => typeof v === "number")
     .reduce((sum, num) => sum + num, 0);
 

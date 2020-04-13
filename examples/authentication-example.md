@@ -15,9 +15,9 @@ authentication.sessions.add(credentials);
 The exposed hooks could be
 
 - `registration`  
-  invoked when a user account gets created
+  invokedwhenauseraccountgetscreated
 - `login`  
-  invoked when a user tries to sign in
+  invokedwhenausertriestosignin
 
 The implementation of the hooks could look like this:
 
@@ -47,7 +47,7 @@ function createSession (account, credentials) {
 Say we want to enforce that username must be valid email addresses.
 
 ```js
-authentication.hook.before("registration", function(properties) {
+authentication.hook.before("registration", function (properties) {
   if (!isValidEmail(properties.username)) {
     throw new Error(properties.username + "is not a valid email address");
   }
@@ -61,7 +61,7 @@ authentication.hook.before("registration", function(properties) {
 Say we do not want to allow users to sign in to their account until their email was verified. Once verified, we set a `verifiedAt` timestamp.
 
 ```js
-authentication.hook.before("login", function(options) {
+authentication.hook.before("login", function (options) {
   if (!options.account.verifiedAt) {
     throw new Error("You must verify your email address before signing in");
   }

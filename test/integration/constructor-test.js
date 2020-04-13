@@ -2,7 +2,7 @@ var test = require("tape");
 
 var Hook = require("../../");
 
-test("Constructor", function(t) {
+test("Constructor", function (t) {
   var hook = new Hook();
 
   t.is(typeof hook, "function", "hook() is a function");
@@ -14,7 +14,7 @@ test("Constructor", function(t) {
   t.end();
 });
 
-test("hook.api", function(t) {
+test("hook.api", function (t) {
   var hook = new Hook();
 
   t.is(typeof hook.api.before, "function", "hook.before() is function");

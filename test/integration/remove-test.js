@@ -2,19 +2,19 @@ var test = require("tape");
 
 var Hook = require("../../");
 
-test('hook.remove("test", check)', function(t) {
+test('hook.remove("test", check)', function (t) {
   var hook = new Hook();
   var calls = [];
 
-  var afterCheck = function() {
+  var afterCheck = function () {
     calls.push("after");
   };
   hook.after("test", afterCheck);
   hook.remove("test", afterCheck);
-  hook("test", function() {
+  hook("test", function () {
     calls.push("check");
   })
-    .then(function() {
+    .then(function () {
       t.deepEqual(calls, ["check"]);
       t.end();
     })
@@ -22,7 +22,7 @@ test('hook.remove("test", check)', function(t) {
     .catch(t.error);
 });
 
-test('hook.remove("test", check) without "check" matching existing function', function(t) {
+test('hook.remove("test", check) without "check" matching existing function', function (t) {
   var hook = new Hook();
   var calls = [];
 
@@ -30,10 +30,10 @@ test('hook.remove("test", check) without "check" matching existing function', fu
   hook.remove("test", () => {
     throw new Error("should not be called");
   });
-  hook("test", function() {
+  hook("test", function () {
     calls.push("check");
   })
-    .then(function() {
+    .then(function () {
       t.deepEqual(calls, ["before", "check"]);
       t.end();
     })
