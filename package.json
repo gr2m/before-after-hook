@@ -54,7 +54,7 @@
     "simple-mock": "^0.8.0",
     "tap-min": "^2.0.0",
     "tap-spec": "^5.0.0",
-    "tape": "^4.2.2",
+    "tape": "^5.0.0",
     "typescript": "^3.5.3",
     "uglify-js": "^3.9.0"
   },
