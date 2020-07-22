@@ -151,13 +151,13 @@ hook("get", fetchFromDatabase, options);
 ## Hook collection API
 
 - [Collection constructor](#collection-constructor)
-- [collection.api](#collectionapi)
-- [collection()](#collection)
-- [collection.before()](#collectionbefore)
-- [collection.error()](#collectionerror)
-- [collection.after()](#collectionafter)
-- [collection.wrap()](#collectionwrap)
-- [collection.remove()](#collectionremove)
+- [hookCollection.api](#hookcollectionapi)
+- [hookCollection()](#hookcollection)
+- [hookCollection.before()](#hookcollectionbefore)
+- [hookCollection.error()](#hookcollectionerror)
+- [hookCollection.after()](#hookcollectionafter)
+- [hookCollection.wrap()](#hookcollectionwrap)
+- [hookCollection.remove()](#hookcollectionremove)
 
 ### Collection constructor
 
