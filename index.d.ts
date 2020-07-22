@@ -43,6 +43,10 @@ export interface HookCollection {
    * Remove added hook for given `name`
    */
   remove(name: string, hook: AnyHook<any, any, any>): void
+  /**
+   * Public API
+   */
+  api: Pick<HookCollection, 'before' | 'error' | 'after' | 'wrap' | 'remove'>
 }
 
 export interface HookSingular<O, R, E> {
@@ -70,6 +74,13 @@ export interface HookSingular<O, R, E> {
    * Remove added hook
    */
   remove(hook: AnyHook<O, R, E>): void
+  /**
+   * Public API
+   */
+  api: Pick<
+    HookSingular<O, R, E>,
+    'before' | 'error' | 'after' | 'wrap' | 'remove'
+  >
 }
 
 type Collection = new () => HookCollection
