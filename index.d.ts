@@ -14,39 +14,83 @@ type AnyHook<O, R, E> =
   | AfterHook<O, R>
   | WrapHook<O, R>
 
-export interface HookCollection {
+type TypeStoreKey = 'O' | 'R' | 'E'
+type TypeStore = { [key in TypeStoreKey]?: any }
+type GetType<
+  Store extends TypeStore,
+  Key extends TypeStoreKey
+> = Key extends keyof Store ? Store[Key] : any
+
+export interface HookCollection<
+  HooksType extends Record<string, TypeStore>,
+  HookName extends keyof HooksType = keyof HooksType
+> {
   /**
    * Invoke before and after hooks
    */
-  (
-    name: string | string[],
-    hookMethod: HookMethod<any, any>,
-    options?: any
-  ): Promise<any>
+  <Name extends HookName>(
+    name: Name | Name[],
+    hookMethod: HookMethod<
+      GetType<HooksType[Name], 'O'>,
+      GetType<HooksType[Name], 'R'>
+    >,
+    options?: GetType<HooksType[Name], 'O'>
+  ): Promise<GetType<HooksType[Name], 'R'>>
   /**
    * Add `before` hook for given `name`
    */
-  before(name: string, beforeHook: BeforeHook<any>): void
+  before<Name extends HookName>(
+    name: Name,
+    beforeHook: BeforeHook<GetType<HooksType[Name], 'O'>>
+  ): void
   /**
    * Add `error` hook for given `name`
    */
-  error(name: string, errorHook: ErrorHook<any, any>): void
+  error<Name extends HookName>(
+    name: Name,
+    errorHook: ErrorHook<
+      GetType<HooksType[Name], 'O'>,
+      GetType<HooksType[Name], 'E'>
+    >
+  ): void
   /**
    * Add `after` hook for given `name`
    */
-  after(name: string, afterHook: AfterHook<any, any>): void
+  after<Name extends HookName>(
+    name: Name,
+    afterHook: AfterHook<
+      GetType<HooksType[Name], 'O'>,
+      GetType<HooksType[Name], 'R'>
+    >
+  ): void
   /**
    * Add `wrap` hook for given `name`
    */
-  wrap(name: string, wrapHook: WrapHook<any, any>): void
+  wrap<Name extends HookName>(
+    name: Name,
+    wrapHook: WrapHook<
+      GetType<HooksType[Name], 'O'>,
+      GetType<HooksType[Name], 'R'>
+    >
+  ): void
   /**
    * Remove added hook for given `name`
    */
-  remove(name: string, hook: AnyHook<any, any, any>): void
+  remove<Name extends HookName>(
+    name: Name,
+    hook: AnyHook<
+      GetType<HooksType[Name], 'O'>,
+      GetType<HooksType[Name], 'R'>,
+      GetType<HooksType[Name], 'E'>
+    >
+  ): void
   /**
    * Public API
    */
-  api: Pick<HookCollection, 'before' | 'error' | 'after' | 'wrap' | 'remove'>
+  api: Pick<
+    HookCollection<HooksType>,
+    'before' | 'error' | 'after' | 'wrap' | 'remove'
+  >
 }
 
 export interface HookSingular<O, R, E> {
@@ -83,11 +127,21 @@ export interface HookSingular<O, R, E> {
   >
 }
 
-type Collection = new () => HookCollection
+type Collection = new <
+  HooksType extends Record<string, TypeStore> = Record<
+    string,
+    { O: any; R: any; E: any }
+  >
+>() => HookCollection<HooksType>
 type Singular = new <O = any, R = any, E = any>() => HookSingular<O, R, E>
 
 interface Hook {
-  new (): HookCollection
+  new <
+    HooksType extends Record<string, TypeStore> = Record<
+      string,
+      { O: any; R: any; E: any }
+    >
+  >(): HookCollection<HooksType>
 
   /**
    * Creates a collection of hooks
