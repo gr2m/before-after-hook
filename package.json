@@ -2,6 +2,7 @@
   "name": "before-after-hook",
   "version": "0.0.0-development",
   "description": "asynchronous before/error/after hooks for internal functionality",
+  "main": "index.js",
   "files": [
     "index.js",
     "index.d.ts",
