@@ -1,28 +1,43 @@
-type HookMethod<O, R> = (options: O) => R | Promise<R>
+type HookMethod<Options, Result> = (
+  options: Options
+) => Result | Promise<Result>
 
-type BeforeHook<O> = (options: O) => void
-type ErrorHook<O, E> = (error: E, options: O) => void
-type AfterHook<O, R> = (result: R, options: O) => void
-type WrapHook<O, R> = (
-  hookMethod: HookMethod<O, R>,
-  options: O
-) => R | Promise<R>
+type BeforeHook<Options> = (options: Options) => void
+type ErrorHook<Options, Error> = (error: Error, options: Options) => void
+type AfterHook<Options, Result> = (result: Result, options: Options) => void
+type WrapHook<Options, Result> = (
+  hookMethod: HookMethod<Options, Result>,
+  options: Options
+) => Result | Promise<Result>
 
-type AnyHook<O, R, E> =
-  | BeforeHook<O>
-  | ErrorHook<O, E>
-  | AfterHook<O, R>
-  | WrapHook<O, R>
+type AnyHook<Options, Result, Error> =
+  | BeforeHook<Options>
+  | ErrorHook<Options, Error>
+  | AfterHook<Options, Result>
+  | WrapHook<Options, Result>
 
-type TypeStoreKey = 'O' | 'R' | 'E'
-type TypeStore = { [key in TypeStoreKey]?: any }
+type TypeStoreKeyLong = 'Options' | 'Result' | 'Error'
+type TypeStoreKeyShort = 'O' | 'R' | 'E'
+type TypeStore =
+  | ({ [key in TypeStoreKeyLong]?: any } &
+      { [key in TypeStoreKeyShort]?: never })
+  | ({ [key in TypeStoreKeyLong]?: never } &
+      { [key in TypeStoreKeyShort]?: any })
 type GetType<
   Store extends TypeStore,
-  Key extends TypeStoreKey
-> = Key extends keyof Store ? Store[Key] : any
+  LongKey extends TypeStoreKeyLong,
+  ShortKey extends TypeStoreKeyShort
+> = LongKey extends keyof Store
+  ? Store[LongKey]
+  : ShortKey extends keyof Store
+  ? Store[ShortKey]
+  : any
 
 export interface HookCollection<
-  HooksType extends Record<string, TypeStore>,
+  HooksType extends Record<string, TypeStore> = Record<
+    string,
+    { Options: any; Result: any; Error: any }
+  >,
   HookName extends keyof HooksType = keyof HooksType
 > {
   /**
@@ -31,17 +46,17 @@ export interface HookCollection<
   <Name extends HookName>(
     name: Name | Name[],
     hookMethod: HookMethod<
-      GetType<HooksType[Name], 'O'>,
-      GetType<HooksType[Name], 'R'>
+      GetType<HooksType[Name], 'Options', 'O'>,
+      GetType<HooksType[Name], 'Result', 'R'>
     >,
-    options?: GetType<HooksType[Name], 'O'>
-  ): Promise<GetType<HooksType[Name], 'R'>>
+    options?: GetType<HooksType[Name], 'Options', 'O'>
+  ): Promise<GetType<HooksType[Name], 'Result', 'R'>>
   /**
    * Add `before` hook for given `name`
    */
   before<Name extends HookName>(
     name: Name,
-    beforeHook: BeforeHook<GetType<HooksType[Name], 'O'>>
+    beforeHook: BeforeHook<GetType<HooksType[Name], 'Options', 'O'>>
   ): void
   /**
    * Add `error` hook for given `name`
@@ -49,8 +64,8 @@ export interface HookCollection<
   error<Name extends HookName>(
     name: Name,
     errorHook: ErrorHook<
-      GetType<HooksType[Name], 'O'>,
-      GetType<HooksType[Name], 'E'>
+      GetType<HooksType[Name], 'Options', 'O'>,
+      GetType<HooksType[Name], 'Error', 'E'>
     >
   ): void
   /**
@@ -59,8 +74,8 @@ export interface HookCollection<
   after<Name extends HookName>(
     name: Name,
     afterHook: AfterHook<
-      GetType<HooksType[Name], 'O'>,
-      GetType<HooksType[Name], 'R'>
+      GetType<HooksType[Name], 'Options', 'O'>,
+      GetType<HooksType[Name], 'Result', 'R'>
     >
   ): void
   /**
@@ -69,8 +84,8 @@ export interface HookCollection<
   wrap<Name extends HookName>(
     name: Name,
     wrapHook: WrapHook<
-      GetType<HooksType[Name], 'O'>,
-      GetType<HooksType[Name], 'R'>
+      GetType<HooksType[Name], 'Options', 'O'>,
+      GetType<HooksType[Name], 'Result', 'R'>
     >
   ): void
   /**
@@ -79,9 +94,9 @@ export interface HookCollection<
   remove<Name extends HookName>(
     name: Name,
     hook: AnyHook<
-      GetType<HooksType[Name], 'O'>,
-      GetType<HooksType[Name], 'R'>,
-      GetType<HooksType[Name], 'E'>
+      GetType<HooksType[Name], 'Options', 'O'>,
+      GetType<HooksType[Name], 'Result', 'R'>,
+      GetType<HooksType[Name], 'Error', 'E'>
     >
   ): void
   /**
@@ -93,36 +108,36 @@ export interface HookCollection<
   >
 }
 
-export interface HookSingular<O, R, E> {
+export interface HookSingular<Options, Result, Error> {
   /**
    * Invoke before and after hooks
    */
-  (hookMethod: HookMethod<O, R>, options?: O): Promise<R>
+  (hookMethod: HookMethod<Options, Result>, options?: Options): Promise<Result>
   /**
    * Add `before` hook
    */
-  before(beforeHook: BeforeHook<O>): void
+  before(beforeHook: BeforeHook<Options>): void
   /**
    * Add `error` hook
    */
-  error(errorHook: ErrorHook<O, E>): void
+  error(errorHook: ErrorHook<Options, Error>): void
   /**
    * Add `after` hook
    */
-  after(afterHook: AfterHook<O, R>): void
+  after(afterHook: AfterHook<Options, Result>): void
   /**
    * Add `wrap` hook
    */
-  wrap(wrapHook: WrapHook<O, R>): void
+  wrap(wrapHook: WrapHook<Options, Result>): void
   /**
    * Remove added hook
    */
-  remove(hook: AnyHook<O, R, E>): void
+  remove(hook: AnyHook<Options, Result, Error>): void
   /**
    * Public API
    */
   api: Pick<
-    HookSingular<O, R, E>,
+    HookSingular<Options, Result, Error>,
     'before' | 'error' | 'after' | 'wrap' | 'remove'
   >
 }
@@ -130,16 +145,20 @@ export interface HookSingular<O, R, E> {
 type Collection = new <
   HooksType extends Record<string, TypeStore> = Record<
     string,
-    { O: any; R: any; E: any }
+    { Options: any; Result: any; Error: any }
   >
 >() => HookCollection<HooksType>
-type Singular = new <O = any, R = any, E = any>() => HookSingular<O, R, E>
+type Singular = new <
+  Options = any,
+  Result = any,
+  Error = any
+>() => HookSingular<Options, Result, Error>
 
 interface Hook {
   new <
     HooksType extends Record<string, TypeStore> = Record<
       string,
-      { O: any; R: any; E: any }
+      { Options: any; Result: any; Error: any }
     >
   >(): HookCollection<HooksType>
 

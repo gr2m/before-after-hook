@@ -531,11 +531,11 @@ This library contains type definitions for TypeScript.
 ```ts
 import { Hook } from 'before-after-hook';
 
-type O = { foo: string }; // type for options
-type R = { bar: number }; // type for result
-type E = Error; // type for error
+type TOptions = { foo: string }; // type for options
+type TResult = { bar: number }; // type for result
+type TError = Error; // type for error
 
-const hook = new Hook.Singular<O, R, E>();
+const hook = new Hook.Singular<TOptions, TResult, TError>();
 
 hook.before((options) => {
   // `options.foo` has `string` type
@@ -579,13 +579,24 @@ In these cases, the omitted types will implicitly be `any`.
 import { Hook } from 'before-after-hook';
 
 type HooksType = {
-  add: { O: { type: string }; R: { id: number }; E: Error };
-  save: { O: { type: string }; R: { id: number } };
-  read: { O: { id: number; foo: number } };
-  destroy: { O: { id: number; foo: string } };
+  add: {
+    Options: { type: string }
+    Result: { id: number }
+    Error: Error
+  };
+  save: {
+    Options: { type: string }
+    Result: { id: number }
+  };
+  read: {
+    Options: { id: number; foo: number }
+  };
+  destroy: {
+    Options: { id: number; foo: string }
+  };
 };
 
-const hooks = Hook.Collection<HooksType>();
+const hooks = new Hook.Collection<HooksType>();
 
 hooks.before('destroy', (options) => {
   // `options.id` has `number` type
