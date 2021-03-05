@@ -529,7 +529,7 @@ This library contains type definitions for TypeScript.
 ### Type support for `Singular`:
 
 ```ts
-import { Hook } from 'before-after-hook';
+import { Hook } from "before-after-hook";
 
 type TOptions = { foo: string }; // type for options
 type TResult = { bar: number }; // type for result
@@ -544,7 +544,7 @@ hook.before((options) => {
   options.foo = 42;
 
   // allowed
-  options.foo = 'Forty-Two';
+  options.foo = "Forty-Two";
 });
 
 const hookedMethod = hook(
@@ -557,7 +557,7 @@ const hookedMethod = hook(
     // allowed
     return { bar: 42 };
   },
-  { foo: 'Forty-Two' }
+  { foo: "Forty-Two" }
 );
 ```
 
@@ -576,43 +576,43 @@ In these cases, the omitted types will implicitly be `any`.
 `Collection` also has strict type support. You can use it like this:
 
 ```ts
-import { Hook } from 'before-after-hook';
+import { Hook } from "before-after-hook";
 
 type HooksType = {
   add: {
-    Options: { type: string }
-    Result: { id: number }
-    Error: Error
+    Options: { type: string };
+    Result: { id: number };
+    Error: Error;
   };
   save: {
-    Options: { type: string }
-    Result: { id: number }
+    Options: { type: string };
+    Result: { id: number };
   };
   read: {
-    Options: { id: number; foo: number }
+    Options: { id: number; foo: number };
   };
   destroy: {
-    Options: { id: number; foo: string }
+    Options: { id: number; foo: string };
   };
 };
 
 const hooks = new Hook.Collection<HooksType>();
 
-hooks.before('destroy', (options) => {
+hooks.before("destroy", (options) => {
   // `options.id` has `number` type
 });
 
-hooks.error('add', (err, options) => {
+hooks.error("add", (err, options) => {
   // `options.type` has `string` type
   // `err` is `instanceof Error`
 });
 
-hooks.error('save', (err, options) => {
+hooks.error("save", (err, options) => {
   // `options.type` has `string` type
   // `err` has type `any`
 });
 
-hooks.after('save', (result, options) => {
+hooks.after("save", (result, options) => {
   // `options.type` has `string` type
   // `result.id` has `number` type
 });
@@ -627,7 +627,7 @@ const hook = new Hook.Collection();
 Alternative imports:
 
 ```ts
-import { Singular, Collection } from 'before-after-hook';
+import { Singular, Collection } from "before-after-hook";
 
 const hook = new Singular();
 const hooks = new Collection();
