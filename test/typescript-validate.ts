@@ -29,6 +29,7 @@ const hookMethod = (options: Options): number => {
 const beforeHook = (_options: Options): void => {};
 const afterHook = (_result: number, _options: Options): void => {};
 const errorHook = (_error: any, _options: Options): void => {};
+const errorCatchHook = (_error: any, _options: Options) => "ok";
 const wrapHook = (hookMethod: any, options: Options): number => {
   beforeHook(options);
   const result = hookMethod(options);
@@ -41,6 +42,7 @@ const hooks = new Collection();
 hooks.before("life", beforeHook);
 hooks.after("life", afterHook);
 hooks.error("life", errorHook);
+hooks.error("life", errorCatchHook);
 hooks.wrap("life", wrapHook);
 
 hooks("life", hookMethod);
@@ -51,6 +53,7 @@ const hook = new Singular<Options, number>();
 hook.before(beforeHook);
 hook.after(afterHook);
 hook.error(errorHook);
+hook.error(errorCatchHook);
 hook.wrap(wrapHook);
 
 hook(hookMethod, options);
