@@ -21,13 +21,13 @@ store.remove(id);
 The exposed hooks could be
 
 - `add`  
-  invokedwhenadocumentgetsadded
+  invoked when a document gets added
 - `update`  
-  invokedwhenadocumentgetsadded
+  invoked when a document gets updated
 - `remove`  
-  invokedwhenadocumentgetsadded
+  invoked when a document is removed
 - `save`  
-  invokedeachtimeadocumentgetssavedwithinthehookslistedabove.
+  invoked each time a document gets saved within the hooks listed above.
 
 The implementation of the hooks could look like this:
 

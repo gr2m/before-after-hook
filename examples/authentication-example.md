@@ -15,9 +15,9 @@ authentication.sessions.add(credentials);
 The exposed hooks could be
 
 - `registration`  
-  invokedwhenauseraccountgetscreated
+  invoked when a user account gets created
 - `login`  
-  invokedwhenausertriestosignin
+  invoked when a user tries to sign in
 
 The implementation of the hooks could look like this:
 
