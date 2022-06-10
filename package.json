@@ -44,7 +44,7 @@
     "mkdirp": "^1.0.3",
     "prettier": "^2.0.0",
     "rimraf": "^3.0.0",
-    "semantic-release": "^17.0.0",
+    "semantic-release": "^19.0.3",
     "simple-mock": "^0.8.0",
     "tap-min": "^2.0.0",
     "tap-spec": "^5.0.0",
