@@ -1,0 +1,40 @@
+name: Test
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  test_matrix:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node_version:
+          - 16
+          - 18
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node_version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node_version }}
+          cache: npm
+      - run: npm ci
+      - run: npm run test:code
+
+  test:
+    runs-on: ubuntu-latest
+    needs: test_matrix
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node_version }}
+          cache: npm
+      - run: npm ci
+      - run: npm run test:tsc
+      - run: npm run test:tsd
+      - run: npm run lint

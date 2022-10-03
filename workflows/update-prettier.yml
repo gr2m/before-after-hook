@@ -1,0 +1,22 @@
+name: Update Prettier
+"on":
+  push:
+    branches:
+      - renovate/prettier-*
+  workflow_dispatch: {}
+jobs:
+  update_prettier:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          cache: npm
+          node-version: lts/*
+      - run: npm ci
+      - run: npm run lint:fix
+      - run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add .
+          git commit -m "style: prettier" && git push || true
