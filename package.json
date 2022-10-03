@@ -53,13 +53,13 @@
     "uglify-js": "^3.9.0"
   },
   "release": {
-    "publish": [
-      "@semantic-release/npm",
+    "branches": [
+      "+([0-9]).x",
+      "main",
+      "next",
       {
-        "path": "@semantic-release/github",
-        "assets": [
-          "dist/*.js"
-        ]
+        "name": "beta",
+        "prerelease": true
       }
     ]
   }
