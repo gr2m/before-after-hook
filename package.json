@@ -1,14 +1,15 @@
 {
   "name": "before-after-hook",
+  "type": "module",
   "version": "0.0.0-development",
   "description": "asynchronous before/error/after hooks for internal functionality",
-  "main": "index.js",
+  "exports": "./index.js",
+  "types": "./index.d.ts",
   "files": [
     "index.js",
     "index.d.ts",
     "lib"
   ],
-  "types": "./index.d.ts",
   "scripts": {
     "prebuild": "rimraf dist && mkdirp dist",
     "build": "browserify index.js --standalone=Hook > dist/before-after-hook.js",
