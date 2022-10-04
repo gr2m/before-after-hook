@@ -21,7 +21,7 @@ The implementation of the hook could look like this:
 
 ```js
 function request (options) {
-  return hook('request', options, function (options) (
+  return hook('request', options, (options) => (
     const {url, ...fetchOptions} = options
     return fetch(url, fetchOptions)
   ))

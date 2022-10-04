@@ -1,11 +1,45 @@
-import { Hook, Collection, Singular } from "../index";
+import { expectType } from "tsd";
+import Hook from "./index.js";
 
-// ************************************************************
-// THIS CODE IS NOT EXECUTED. IT IS JUST FOR TYPECHECKING
-// ************************************************************
+export async function singularReadmeTest() {
+  // instantiate singular hook API
+  const hook = new Hook.Singular();
 
-const _Collection = Hook.Collection;
-const _Singular = Hook.Singular;
+  // Create a hook
+  const method = () => {};
+  function getData(options: unknown) {
+    return hook(method, options);
+  }
+
+  // register before/error/after hooks.
+  // The methods can be async or return a promise
+  hook.before(() => {});
+  hook.error(() => {});
+  hook.after(() => {});
+
+  expectType<Promise<any>>(getData({ id: 123 }));
+}
+
+export function collectionReadmeTest() {
+  // instantiate hook collection API
+  const hookCollection = new Hook.Collection();
+
+  // Create a hook
+  const method = () => {};
+  function getData(options: unknown) {
+    return hookCollection("get", method, options);
+  }
+
+  // register before/error/after hooks.
+  // The methods can be async or return a promise
+  hookCollection.before("get", () => {});
+  hookCollection.error("get", () => {});
+  hookCollection.after("get", () => {});
+
+  expectType<Promise<any>>(getData({ id: 123 }));
+}
+
+// TODO: add assertions below
 
 type Options = {
   [key: string]: any;
@@ -37,7 +71,7 @@ const wrapHook = (hookMethod: any, options: Options): number => {
   return result;
 };
 
-const hooks = new Collection();
+const hooks = new Hook.Collection();
 
 hooks.before("life", beforeHook);
 hooks.after("life", afterHook);
@@ -48,7 +82,7 @@ hooks.wrap("life", wrapHook);
 hooks("life", hookMethod);
 hooks(["life"], hookMethod);
 
-const hook = new Singular<Options, number>();
+const hook = new Hook.Singular<Options, number>();
 
 hook.before(beforeHook);
 hook.after(afterHook);

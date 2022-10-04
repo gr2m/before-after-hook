@@ -32,10 +32,12 @@ The exposed hooks could be
 The implementation of the hooks could look like this:
 
 ```js
+const hook = new Hook.Collection();
+
 function storeAdd(newDoc) {
-  return hook(['add', 'save'], newDoc, function (newDoc) (
-    return database.create(newDoc)
-  ))
+  return hook(["add", "save"], newDoc, (newDoc) => {
+    return database.create(newDoc);
+  });
 }
 ```
 
@@ -55,7 +57,7 @@ documents with a `type` property altogether. We also want to make sure that
 each `item` has a `listId` property
 
 ```js
-store.hook.before("save", function (doc) {
+hook.before("save", (doc) => {
   if (!doc.type) {
     throw new Error("type property is required");
   }
@@ -88,12 +90,12 @@ store.add({ type: "item", listId: "id34567", note: "Remember the milk!" });
 ## timestamps and user reference
 
 ```js
-store.hook.before("add", function (doc) {
+hook.before("add", (doc) => {
   doc.createdAt = new Date().toISOString();
   doc.createdBy = app.currentUser.id;
   return doc;
 });
-store.hook.before("update", function (doc) {
+hook.before("update", (doc) => {
   doc.updatedAt = new Date().toISOString();
   doc.updatedBy = app.currentUser.id;
   return doc;
@@ -103,13 +105,13 @@ store.hook.before("update", function (doc) {
 ## events
 
 ```js
-store.hook.after("add", function (doc) {
+hook.after("add", (doc) => {
   app.emit("data:" + doc.type + ":add", doc);
 });
-store.hook.after("update", function (doc) {
+hook.after("update", (doc) => {
   app.emit("data:" + doc.type + ":update", doc);
 });
-store.hook.after("remove", function (doc) {
+hook.after("remove", (doc) => {
   app.emit("data:" + doc.type + ":remove", doc);
 });
 ```
