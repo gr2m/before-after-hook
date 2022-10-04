@@ -1,6 +1,6 @@
-var register = require("./lib/register");
-var addHook = require("./lib/add");
-var removeHook = require("./lib/remove");
+import { register } from "./lib/register.js";
+import { addHook } from "./lib/add.js";
+import { removeHook } from "./lib/remove.js";
 
 // bind with array of arguments: https://stackoverflow.com/a/21792913
 var bind = Function.bind;
@@ -19,7 +19,7 @@ function bindApi(hook, state, name) {
   });
 }
 
-function HookSingular() {
+export function Singular() {
   var singularHookName = "h";
   var singularHookState = {
     registry: {},
@@ -29,7 +29,7 @@ function HookSingular() {
   return singularHook;
 }
 
-function HookCollection() {
+export function Collection() {
   var state = {
     registry: {},
   };
@@ -39,23 +39,3 @@ function HookCollection() {
 
   return hook;
 }
-
-var collectionHookDeprecationMessageDisplayed = false;
-function Hook() {
-  if (!collectionHookDeprecationMessageDisplayed) {
-    console.warn(
-      '[before-after-hook]: "Hook()" repurposing warning, use "Hook.Collection()". Read more: https://git.io/upgrade-before-after-hook-to-1.4'
-    );
-    collectionHookDeprecationMessageDisplayed = true;
-  }
-  return HookCollection();
-}
-
-Hook.Singular = HookSingular.bind();
-Hook.Collection = HookCollection.bind();
-
-module.exports = Hook;
-// expose constructors as a named property for TypeScript
-module.exports.Hook = Hook;
-module.exports.Singular = Hook.Singular;
-module.exports.Collection = Hook.Collection;
