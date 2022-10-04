@@ -22,14 +22,16 @@ The exposed hooks could be
 The implementation of the hooks could look like this:
 
 ```js
+const hook = new Hook.Collection();
+
 function createUserAccount (properties) {
-  return hook('registration', properties, function (properties) (
+  return hook('registration', properties, (properties) => (
     return accountDatabase.create(properties)
   ))
 }
 function createSession (account, credentials) {
-  var options = {account: account, credentials: credentials}
-  return hook('login', options, function (options) {
+  const options = {account: account, credentials: credentials}
+  return hook('login', options, (options) => {
     if (!validateCredentials(options.account, options.credentials) {
       throw new Error('Unauthorized: username or password is incorrect')
     })
@@ -47,7 +49,7 @@ function createSession (account, credentials) {
 Say we want to enforce that username must be valid email addresses.
 
 ```js
-authentication.hook.before("registration", function (properties) {
+hook.before("registration", (properties) => {
   if (!isValidEmail(properties.username)) {
     throw new Error(properties.username + "is not a valid email address");
   }
@@ -61,7 +63,7 @@ authentication.hook.before("registration", function (properties) {
 Say we do not want to allow users to sign in to their account until their email was verified. Once verified, we set a `verifiedAt` timestamp.
 
 ```js
-authentication.hook.before("login", function (options) {
+hook.before("login", (options) => {
   if (!options.account.verifiedAt) {
     throw new Error("You must verify your email address before signing in");
   }

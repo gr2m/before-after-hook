@@ -25,10 +25,10 @@ type AnyHook<Options, Result, Error> =
 type TypeStoreKeyLong = "Options" | "Result" | "Error";
 type TypeStoreKeyShort = "O" | "R" | "E";
 type TypeStore =
-  | ({ [key in TypeStoreKeyLong]?: any } &
+  | ({ [key in TypeStoreKeyLong]?: unknown } &
       { [key in TypeStoreKeyShort]?: never })
   | ({ [key in TypeStoreKeyLong]?: never } &
-      { [key in TypeStoreKeyShort]?: any });
+      { [key in TypeStoreKeyShort]?: unknown });
 type GetType<
   Store extends TypeStore,
   LongKey extends TypeStoreKeyLong,
@@ -37,12 +37,12 @@ type GetType<
   ? Store[LongKey]
   : ShortKey extends keyof Store
   ? Store[ShortKey]
-  : any;
+  : unknown;
 
 export interface HookCollection<
   HooksType extends Record<string, TypeStore> = Record<
     string,
-    { Options: any; Result: any; Error: any }
+    { Options: unknown; Result: unknown; Error: unknown }
   >,
   HookName extends keyof HooksType = keyof HooksType
 > {
@@ -160,14 +160,7 @@ type Singular = new <
   Error = any
 >() => HookSingular<Options, Result, Error>;
 
-interface Hook {
-  new <
-    HooksType extends Record<string, TypeStore> = Record<
-      string,
-      { Options: any; Result: any; Error: any }
-    >
-  >(): HookCollection<HooksType>;
-
+declare const Hook: {
   /**
    * Creates a collection of hooks
    */
@@ -177,10 +170,6 @@ interface Hook {
    * Creates a nameless hook that supports strict typings
    */
   Singular: Singular;
-}
-
-export const Hook: Hook;
-export const Collection: Collection;
-export const Singular: Singular;
+};
 
 export default Hook;
