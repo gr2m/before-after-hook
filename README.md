@@ -28,7 +28,7 @@ Node
 Install with <code>npm install before-after-hook</code>
 
 ```js
-import GitHubProject from "before-after-hook";
+import Hook from "before-after-hook";
 ```
 
 </td></tr>
