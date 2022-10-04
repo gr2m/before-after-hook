@@ -6,7 +6,7 @@ type BeforeHook<Options> = (options: Options) => void | Promise<void>;
 type ErrorHook<Options, Error> = (
   error: Error,
   options: Options
-) => void | Promise<void>;
+) => unknown | Promise<unknown>;
 type AfterHook<Options, Result> = (
   result: Result,
   options: Options
