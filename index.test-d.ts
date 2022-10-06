@@ -5,6 +5,8 @@ export async function singularReadmeTest() {
   // instantiate singular hook API
   const hook = new Hook.Singular();
 
+  expectType<InstanceType<Hook["Singular"]>>(hook);
+
   // Create a hook
   const method = () => {};
   function getData(options: unknown) {
@@ -17,12 +19,14 @@ export async function singularReadmeTest() {
   hook.error(() => {});
   hook.after(() => {});
 
-  expectType<Promise<any>>(getData({ id: 123 }));
+  expectType<Promise<unknown>>(getData({ id: 123 }));
 }
 
 export function collectionReadmeTest() {
   // instantiate hook collection API
   const hookCollection = new Hook.Collection();
+
+  expectType<InstanceType<Hook["Collection"]>>(hookCollection);
 
   // Create a hook
   const method = () => {};
