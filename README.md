@@ -16,7 +16,7 @@ Load <code>before-after-hook</code> directly from <a href="https://cdn.skypack.d
 
 ```html
 <script type="module">
-  import Hoom from "https://cdn.skypack.dev/before-after-hook";
+  import Hook from "https://cdn.skypack.dev/before-after-hook";
 </script>
 ```
 
