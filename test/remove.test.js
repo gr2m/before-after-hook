@@ -1,8 +1,8 @@
-import test from "ava";
+import { test, assert } from "./testrunner.js";
 
 import Hook from "../index.js";
 
-test('hook.remove("test", check)', async (t) => {
+test('hook.remove("test", check)', async () => {
   const hook = new Hook.Collection();
   const calls = [];
 
@@ -16,10 +16,11 @@ test('hook.remove("test", check)', async (t) => {
     calls.push("check");
   });
 
-  t.deepEqual(calls, ["check"]);
+  assert(calls.length === 1);
+  assert(calls[0] === "check");
 });
 
-test('hook.remove("test", check) without "check" matching existing function', async (t) => {
+test('hook.remove("test", check) without "check" matching existing function', async () => {
   const hook = new Hook.Collection();
   const calls = [];
 
@@ -32,5 +33,7 @@ test('hook.remove("test", check) without "check" matching existing function', as
     calls.push("check");
   });
 
-  t.deepEqual(calls, ["before", "check"]);
+  assert(calls.length === 2);
+  assert(calls[0] === "before");
+  assert(calls[1] === "check");
 });

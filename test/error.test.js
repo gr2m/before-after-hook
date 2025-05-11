@@ -1,8 +1,8 @@
-import test from "ava";
+import { test, assert } from "./testrunner.js";
 
 import Hook from "../index.js";
 
-test('hook.error("test", handleError) order', async (t) => {
+test('hook.error("test", handleError) order', async () => {
   const hook = new Hook.Collection();
   const calls = [];
 
@@ -18,10 +18,13 @@ test('hook.error("test", handleError) order', async (t) => {
     throw new Error("oops");
   });
 
-  t.deepEqual(calls, ["method", "errorHook", "afterHook"]);
+  assert(calls.length === 3);
+  assert(calls[0] === "method");
+  assert(calls[1] === "errorHook");
+  assert(calls[2] === "afterHook");
 });
 
-test('hook.error("test", handleError) async order', async (t) => {
+test('hook.error("test", handleError) async order', async () => {
   const hook = new Hook.Collection();
   const calls = [];
 
@@ -36,10 +39,12 @@ test('hook.error("test", handleError) async order', async (t) => {
     });
   });
 
-  t.deepEqual(calls, ["method", "errorHook"]);
+  assert(calls.length === 2);
+  assert(calls[0] === "method");
+  assert(calls[1] === "errorHook");
 });
 
-test('hook.error("test", handleError) can mutate error', async (t) => {
+test('hook.error("test", handleError) can mutate error', async () => {
   const hook = new Hook.Collection();
   const method = function method() {
     throw new Error("oops");
@@ -52,17 +57,16 @@ test('hook.error("test", handleError) can mutate error', async (t) => {
 
   try {
     await hook("test", method);
-    t.fail("must not resolve");
+    assert(false, "must not resolve");
   } catch (error) {
-    t.is(
-      error.message,
-      "error hook",
+    assert(
+      error.message === "error hook",
       "rejects with error message from error hook"
     );
   }
 });
 
-test('hook.error("test", handleError) rejected promise', async (t) => {
+test('hook.error("test", handleError) rejected promise', async () => {
   const hook = new Hook.Collection();
   const method = function method() {
     throw new Error("oops");
@@ -75,9 +79,9 @@ test('hook.error("test", handleError) rejected promise', async (t) => {
 
   try {
     await hook("test", method);
-    t.fail("must not resolve");
+    assert(false, "must not resolve");
   } catch (error) {
-    t.is(
+    assert(
       error.message,
       "error hook",
       "rejects with error message from error hook"
@@ -85,7 +89,7 @@ test('hook.error("test", handleError) rejected promise', async (t) => {
   }
 });
 
-test('hook.error("test", handleError) can catch error', async (t) => {
+test('hook.error("test", handleError) can catch error', async () => {
   const hook = new Hook.Collection();
   const method = function method() {
     throw new Error("oops");
@@ -97,29 +101,29 @@ test('hook.error("test", handleError) can catch error', async (t) => {
 
   const result = await hook("test", method);
 
-  t.is(result.ok, true);
+  assert(result.ok === true);
 });
 
-test('hook.error("test", handleError) receives options', async (t) => {
+test('hook.error("test", handleError) receives options', async () => {
   const hook = new Hook.Collection();
   const method = function method() {
     throw new Error("oops");
   };
 
   hook.error("test", (error, options) => {
-    t.is(options.optionFoo, "bar");
+    assert(options.optionFoo === "bar");
     throw error;
   });
 
   try {
     await hook("test", method, { optionFoo: "bar" });
-    t.fail("must not resolve");
+    assert(false, "must not resolve");
   } catch (error) {
-    t.is(error.message, "oops");
+    assert(error.message === "oops");
   }
 });
 
-test('hook.error("test", handleError) multiple error hooks get executed after method', async (t) => {
+test('hook.error("test", handleError) multiple error hooks get executed after method', async () => {
   const hook = new Hook.Collection();
   const callOrder = [];
   const method = function method() {
@@ -143,10 +147,13 @@ test('hook.error("test", handleError) multiple error hooks get executed after me
 
   try {
     await hook("test", method);
-    t.fail("should not resolve");
+    assert(false, "should not resolve");
   } catch (error) {
-    t.is(errorHandlerCallCount, 2);
-    t.deepEqual(callOrder, [1, 2, 3]);
-    t.is(error.message, "error handler oops");
+    assert(errorHandlerCallCount === 2);
+    assert(callOrder.length === 3);
+    assert(callOrder[0] === 1);
+    assert(callOrder[1] === 2);
+    assert(callOrder[2] === 3);
+    assert(error.message === "error handler oops");
   }
 });

@@ -1,5 +1,3 @@
-// @ts-check
-
 import { register } from "./lib/register.js";
 import { addHook } from "./lib/add.js";
 import { removeHook } from "./lib/remove.js";

@@ -1,8 +1,8 @@
-import test from "ava";
+import { test, assert } from "./testrunner.js";
 
 import { register } from "../lib/register.js";
 
-test('register("name", method) with empty registry and thrown error by method', async (t) => {
+test('register("name", method) with empty registry and thrown error by method', async () => {
   try {
     await register(
       {
@@ -13,16 +13,32 @@ test('register("name", method) with empty registry and thrown error by method', 
         throw new Error("foo");
       }
     );
-    t.fail("should not resolve");
+    assert(false, "should not resolve");
   } catch (error) {
-    t.is("foo", error.message);
+    assert(error.message === "foo", "rejects with error message from method");
   }
 });
 
-test('register("name", undefined)', async (t) => {
-  t.throws(register.bind(null, {}, "test", undefined));
+test('register("name", undefined)', () => {
+  try {
+    register.bind(null, {}, "test", undefined)();
+    assert(false, "should throw");
+  } catch (error) {
+    assert(
+      error.message === "method for before hook must be a function",
+      "rejects with error message from method"
+    );
+  }
 });
 
-test('register("name", undefined, method)', async (t) => {
-  t.throws(register.bind(null, {}, "test", undefined, () => {}));
+test('register("name", undefined, method)', () => {
+  try {
+    register.bind(null, {}, "test", undefined, () => {})();
+    assert(false, "should throw");
+  } catch (error) {
+    assert(
+      error.message === "method for before hook must be a function",
+      "rejects with error message from method"
+    );
+  }
 });

@@ -1,8 +1,8 @@
-import test from "ava";
+import { test, assert } from "./testrunner.js";
 
 import Hook from "../index.js";
 
-test('hook.wrap("test", wrapMethod) before/after/error', async (t) => {
+test('hook.wrap("test", wrapMethod) before/after/error', async () => {
   const hook = new Hook.Collection();
   const calls = [];
 
@@ -21,10 +21,14 @@ test('hook.wrap("test", wrapMethod) before/after/error', async (t) => {
     throw new Error("ooops");
   });
 
-  t.deepEqual(calls, ["before", "method", "error", "after"]);
+  assert(calls.length === 4);
+  assert(calls[0] === "before");
+  assert(calls[1] === "method");
+  assert(calls[2] === "error");
+  assert(calls[3] === "after");
 });
 
-test('hook.wrap("test", wrapMethod) async check', async (t) => {
+test('hook.wrap("test", wrapMethod) async check', async () => {
   const hook = new Hook.Collection();
   const calls = [];
 
@@ -40,10 +44,14 @@ test('hook.wrap("test", wrapMethod) async check', async (t) => {
     throw new Error("ooops");
   });
 
-  t.deepEqual(calls, ["before", "method", "error", "after"]);
+  assert(calls.length === 4);
+  assert(calls[0] === "before");
+  assert(calls[1] === "method");
+  assert(calls[2] === "error");
+  assert(calls[3] === "after");
 });
 
-test('hook.wrap("test", wrapMethod) throws error', async (t) => {
+test('hook.wrap("test", wrapMethod) throws error', async () => {
   const hook = new Hook.Collection();
 
   let methodCallCount = 0;
@@ -57,14 +65,14 @@ test('hook.wrap("test", wrapMethod) throws error', async (t) => {
 
   try {
     await hook("test", method);
-    t.fail("must not resolve");
+    assert(false, "must not resolve");
   } catch (error) {
-    t.is(error.message, "oops", "rejects with error message from check");
-    t.is(methodCallCount, 0);
+    assert(error.message === "oops", "rejects with error message from check");
+    assert(methodCallCount === 0);
   }
 });
 
-test('hook.wrap("test", wrapMethod) rejected promise', async (t) => {
+test('hook.wrap("test", wrapMethod) rejected promise', async () => {
   const hook = new Hook.Collection();
 
   let methodCallCount = 0;
@@ -79,14 +87,14 @@ test('hook.wrap("test", wrapMethod) rejected promise', async (t) => {
   try {
     await hook("test", method);
     hook("test", method);
-    t.fail("must not resolve");
+    assert(false, "must not resolve");
   } catch (error) {
-    t.is(error.message, "oops", "rejects with error message from check");
-    t.is(methodCallCount, 0);
+    assert(error.message, "oops", "rejects with error message from check");
+    assert(methodCallCount === 0);
   }
 });
 
-test('hook.wrap("test", wrapMethod) options', async (t) => {
+test('hook.wrap("test", wrapMethod) options', async () => {
   const hook = new Hook.Collection();
 
   hook.wrap("test", (method, options) => {
@@ -101,15 +109,15 @@ test('hook.wrap("test", wrapMethod) options', async (t) => {
   await hook(
     "test",
     (options) => {
-      t.is(options.foo, "bar");
-      t.is(options.baz, "ar");
-      t.is(options.otherbar, "baz");
+      assert(options.foo === "bar", "passes options to before hook");
+      assert(options.baz === "ar", "passes options to before hook");
+      assert(options.otherbar === "baz", "passes options to before hook");
     },
     { foo: "notbar", otherbar: "baz" }
   );
 });
 
-test('hook.wrap("test", wrapMethod) multiple wrap hooks', async (t) => {
+test('hook.wrap("test", wrapMethod) multiple wrap hooks', async () => {
   const hook = new Hook.Collection();
   const calls = [];
 
@@ -126,5 +134,8 @@ test('hook.wrap("test", wrapMethod) multiple wrap hooks', async (t) => {
     calls.push("method");
   });
 
-  t.deepEqual(calls, ["wrap2", "wrap1", "method"]);
+  assert(calls.length === 3);
+  assert(calls[0] === "wrap2");
+  assert(calls[1] === "wrap1");
+  assert(calls[2] === "method");
 });
