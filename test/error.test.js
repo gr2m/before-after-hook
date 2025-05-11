@@ -1,4 +1,3 @@
-import sinon from "sinon";
 import test from "ava";
 
 import Hook from "../index.js";
@@ -42,7 +41,9 @@ test('hook.error("test", handleError) async order', async (t) => {
 
 test('hook.error("test", handleError) can mutate error', async (t) => {
   const hook = new Hook.Collection();
-  const method = sinon.stub().throws(new Error("oops"));
+  const method = function method() {
+    throw new Error("oops");
+  };
 
   hook.error("test", (error) => {
     error.message = "error hook";
@@ -63,7 +64,9 @@ test('hook.error("test", handleError) can mutate error', async (t) => {
 
 test('hook.error("test", handleError) rejected promise', async (t) => {
   const hook = new Hook.Collection();
-  const method = sinon.stub().throws(new Error("oops"));
+  const method = function method() {
+    throw new Error("oops");
+  };
 
   hook.error("test", (error) => {
     error.message = "error hook";
@@ -84,7 +87,9 @@ test('hook.error("test", handleError) rejected promise', async (t) => {
 
 test('hook.error("test", handleError) can catch error', async (t) => {
   const hook = new Hook.Collection();
-  const method = sinon.stub().throws(new Error("oops"));
+  const method = function method() {
+    throw new Error("oops");
+  };
 
   hook.error("test", () => {
     return { ok: true };
@@ -97,7 +102,9 @@ test('hook.error("test", handleError) can catch error', async (t) => {
 
 test('hook.error("test", handleError) receives options', async (t) => {
   const hook = new Hook.Collection();
-  const method = sinon.stub().throws(new Error("oops"));
+  const method = function method() {
+    throw new Error("oops");
+  };
 
   hook.error("test", (error, options) => {
     t.is(options.optionFoo, "bar");
@@ -115,11 +122,15 @@ test('hook.error("test", handleError) receives options', async (t) => {
 test('hook.error("test", handleError) multiple error hooks get executed after method', async (t) => {
   const hook = new Hook.Collection();
   const callOrder = [];
-  const method = sinon.stub().callsFake(() => {
+  const method = function method() {
     callOrder.push(1);
     throw new Error("oops");
-  });
-  const errorHandler = sinon.stub().throws(new Error("error handler oops"));
+  };
+  let errorHandlerCallCount = 0;
+  const errorHandler = function errorHandler() {
+    errorHandlerCallCount++;
+    throw new Error("error handler oops");
+  };
 
   hook.error("test", () => {
     callOrder.push(2);
@@ -134,7 +145,7 @@ test('hook.error("test", handleError) multiple error hooks get executed after me
     await hook("test", method);
     t.fail("should not resolve");
   } catch (error) {
-    t.is(errorHandler.callCount, 2);
+    t.is(errorHandlerCallCount, 2);
     t.deepEqual(callOrder, [1, 2, 3]);
     t.is(error.message, "error handler oops");
   }

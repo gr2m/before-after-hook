@@ -1,4 +1,3 @@
-import sinon from "sinon";
 import test from "ava";
 
 import Hook from "../index.js";
@@ -35,7 +34,7 @@ test('hook.after("test", afterCheck) async afterCheck', async (t) => {
 
 test('hook.after("test", afterCheck) throws error', async (t) => {
   const hook = new Hook.Collection();
-  const method = sinon.stub();
+  const method = function method() {};
 
   hook.after("test", () => {
     throw new Error("oops");
@@ -51,7 +50,7 @@ test('hook.after("test", afterCheck) throws error', async (t) => {
 
 test('hook.after("test", afterCheck) rejected promise', async (t) => {
   const hook = new Hook.Collection();
-  const method = sinon.stub();
+  const method = function method() {};
 
   hook.after("test", () => {
     return Promise.reject(new Error("oops"));

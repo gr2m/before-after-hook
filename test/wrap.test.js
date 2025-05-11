@@ -1,4 +1,3 @@
-import sinon from "sinon";
 import test from "ava";
 
 import Hook from "../index.js";
@@ -46,7 +45,11 @@ test('hook.wrap("test", wrapMethod) async check', async (t) => {
 
 test('hook.wrap("test", wrapMethod) throws error', async (t) => {
   const hook = new Hook.Collection();
-  const method = sinon.stub();
+
+  let methodCallCount = 0;
+  const method = function method() {
+    methodCallCount++;
+  };
 
   hook.wrap("test", () => {
     throw new Error("oops");
@@ -57,13 +60,17 @@ test('hook.wrap("test", wrapMethod) throws error', async (t) => {
     t.fail("must not resolve");
   } catch (error) {
     t.is(error.message, "oops", "rejects with error message from check");
-    t.is(method.callCount, 0);
+    t.is(methodCallCount, 0);
   }
 });
 
 test('hook.wrap("test", wrapMethod) rejected promise', async (t) => {
   const hook = new Hook.Collection();
-  const method = sinon.stub();
+
+  let methodCallCount = 0;
+  const method = function method() {
+    methodCallCount++;
+  };
 
   hook.wrap("test", () => {
     return Promise.reject(new Error("oops"));
@@ -75,7 +82,7 @@ test('hook.wrap("test", wrapMethod) rejected promise', async (t) => {
     t.fail("must not resolve");
   } catch (error) {
     t.is(error.message, "oops", "rejects with error message from check");
-    t.is(method.callCount, 0);
+    t.is(methodCallCount, 0);
   }
 });
 
