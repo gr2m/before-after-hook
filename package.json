@@ -12,7 +12,7 @@
   ],
   "scripts": {
     "test": "npm run test:code && npm run test:tsc && npm run test:tsd && npm run lint",
-    "test:code": "vitest",
+    "test:code": "vitest run",
     "test:tsc": "tsc --allowJs --noEmit --esModuleInterop --skipLibCheck --lib es2020 index.js",
     "test:tsd": "tsd",
     "lint": "prettier --check \"*.{js,json,ts,md}\" \"test//*.{js,json,ts,md}\" \".github/**/*.yml\"",
