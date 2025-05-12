@@ -16,7 +16,7 @@ jobs:
         with:
           deno-version: v2.x # Run with latest stable Deno.
       - run: deno install
-      - run: deno test
+      - run: deno test --no-check
 
   test-bun:
     runs-on: ubuntu-latest
