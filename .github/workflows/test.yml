@@ -7,13 +7,34 @@ on:
     types: [opened, synchronize]
 
 jobs:
-  test_matrix:
+  test-deno:
+    runs-on: ubuntu-latest
+    needs: test-node
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x # Run with latest stable Deno.
+      - run: deno install
+      - run: deno test --no-check
+
+  test-bun:
+    runs-on: ubuntu-latest
+    needs: test-node
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install
+      - run: bun test
+
+  test-node:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         node_version:
-          - 16
-          - 18
+          - 20
+          - 22
+          - 24
 
     steps:
       - uses: actions/checkout@v3
@@ -27,16 +48,19 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
-    needs: test_matrix
+    needs:
+      - test-bun
+      - test-deno
+      - test-node
     # prevent to be taken as pass when `test_matrix` was not picked up yet
     if: ${{ always() }}
     steps:
       - run: exit 1
-        if: ${{ needs.test_matrix.result != 'success' }}
+        if: ${{ needs.test-bun.result != 'success' || needs.test-deno.result != 'success' || needs.test-node.result != 'success' }}
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node_version }}
+          node-version: 24
           cache: npm
       - run: npm ci
       - run: npm run test:tsc

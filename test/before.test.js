@@ -1,9 +1,8 @@
-import sinon from "sinon";
-import test from "ava";
+import { test, assert } from "./testrunner.js";
 
 import Hook from "../index.js";
 
-test('hook.before("test", check) order', async (t) => {
+test('hook.before("test", check) order', async () => {
   const hook = new Hook.Collection();
   const calls = [];
 
@@ -15,10 +14,12 @@ test('hook.before("test", check) order', async (t) => {
     calls.push("check");
   });
 
-  t.deepEqual(calls, ["before", "check"]);
+  assert(calls.length === 2);
+  assert(calls[0] === "before");
+  assert(calls[1] === "check");
 });
 
-test('hook.before("test", check) async check', async (t) => {
+test('hook.before("test", check) async check', async () => {
   const hook = new Hook.Collection();
   const calls = [];
 
@@ -30,12 +31,18 @@ test('hook.before("test", check) async check', async (t) => {
     calls.push("check");
   });
 
-  t.deepEqual(calls, ["before", "check"]);
+  assert(calls.length === 2);
+  assert(calls[0] === "before");
+  assert(calls[1] === "check");
 });
 
-test('hook.before("test", check) throws error', async (t) => {
+test('hook.before("test", check) throws error', async () => {
   const hook = new Hook.Collection();
-  const method = sinon.stub();
+
+  let methodCallCount = 0;
+  const method = function method() {
+    methodCallCount++;
+  };
 
   hook.before("test", () => {
     throw new Error("oops");
@@ -43,16 +50,20 @@ test('hook.before("test", check) throws error', async (t) => {
 
   try {
     await hook("test", method);
-    t.fail("must not resolve");
+    assert(false, "must not resolve");
   } catch (error) {
-    t.is(error.message, "oops", "rejects with error message from check");
-    t.is(method.callCount, 0);
+    assert(error.message === "oops", "rejects with error message from check");
+    assert(methodCallCount === 0);
   }
 });
 
-test('hook.before("test", check) rejected promise', async (t) => {
+test('hook.before("test", check) rejected promise', async () => {
   const hook = new Hook.Collection();
-  const method = sinon.stub();
+
+  let methodCallCount = 0;
+  const method = function method() {
+    methodCallCount++;
+  };
 
   hook.before("test", () => {
     return Promise.reject(new Error("oops"));
@@ -60,14 +71,14 @@ test('hook.before("test", check) rejected promise', async (t) => {
 
   try {
     await hook("test", method);
-    t.fail("must not resolve");
+    assert(false, "must not resolve");
   } catch (error) {
-    t.is(error.message, "oops", "rejects with error message from check");
-    t.is(method.callCount, 0);
+    assert(error.message === "oops", "rejects with error message from check");
+    assert(methodCallCount === 0);
   }
 });
 
-test('hook.before("test", check) options', async (t) => {
+test('hook.before("test", check) options', async () => {
   const hook = new Hook.Collection();
 
   hook.before("test", (options) => {
@@ -80,15 +91,15 @@ test('hook.before("test", check) options', async (t) => {
   await hook(
     "test",
     (options) => {
-      t.is(options.foo, "bar");
-      t.is(options.baz, "ar");
-      t.is(options.otherbar, "baz");
+      assert(options.foo === "bar", "passes options to before hook");
+      assert(options.baz === "ar", "passes options to before hook");
+      assert(options.otherbar === "baz", "passes options to before hook");
     },
     { foo: "notbar", otherbar: "baz" }
   );
 });
 
-test('before("test", check) multiple before hooks get executed before method', async (t) => {
+test('before("test", check) multiple before hooks get executed before method', async () => {
   const hook = new Hook.Collection();
   const calls = [];
 
@@ -103,5 +114,8 @@ test('before("test", check) multiple before hooks get executed before method', a
     calls.push("check");
   });
 
-  t.deepEqual(calls, ["before2", "before1", "check"]);
+  assert(calls.length === 3);
+  assert(calls[0] === "before2");
+  assert(calls[1] === "before1");
+  assert(calls[2] === "check");
 });
