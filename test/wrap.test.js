@@ -94,7 +94,7 @@ test('hook.wrap("test", wrapMethod) rejected promise', async () => {
   }
 });
 
-test('hook.wrap("test", wrapMethod) options', async () => {
+test('hook.wrap("test", wrapMethod) mutable options', async () => {
   const hook = new Hook.Collection();
 
   hook.wrap("test", (method, options) => {
@@ -104,6 +104,27 @@ test('hook.wrap("test", wrapMethod) options', async () => {
   hook.wrap("test", (method, options) => {
     options.baz = "ar";
     return method(options);
+  });
+
+  await hook(
+    "test",
+    (options) => {
+      assert(options.foo === "bar", "passes options to before hook");
+      assert(options.baz === "ar", "passes options to before hook");
+      assert(options.otherbar === "baz", "passes options to before hook");
+    },
+    { foo: "notbar", otherbar: "baz" }
+  );
+});
+
+test('hook.wrap("test", wrapMethod) argument options', async () => {
+  const hook = new Hook.Collection();
+
+  hook.wrap("test", (method, options) => {
+    return method({ ...options, foo: "bar" });
+  });
+  hook.wrap("test", (method, options) => {
+    return method({ ...options, baz: "ar" });
   });
 
   await hook(
