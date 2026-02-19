@@ -157,7 +157,7 @@ test('hook.wrap("test", wrapMethod) argument options for multiple names', async 
       assert(options.foo === "bar", "passes options to wrap hook");
       assert(options.baz === "ar", "passes options to wrap hook");
       assert(options.otherbar === "baz", "passes options to wrap hook");
-      assert(options.bat === "ter", "passes options to wrap hook")
+      assert(options.bat === "ter", "passes options to wrap hook");
     },
     { foo: "notbar", otherbar: "baz" }
   );
