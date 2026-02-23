@@ -94,7 +94,7 @@ test('hook.wrap("test", wrapMethod) rejected promise', async () => {
   }
 });
 
-test('hook.wrap("test", wrapMethod) options', async () => {
+test('hook.wrap("test", wrapMethod) mutable options', async () => {
   const hook = new Hook.Collection();
 
   hook.wrap("test", (method, options) => {
@@ -112,6 +112,52 @@ test('hook.wrap("test", wrapMethod) options', async () => {
       assert(options.foo === "bar", "passes options to before hook");
       assert(options.baz === "ar", "passes options to before hook");
       assert(options.otherbar === "baz", "passes options to before hook");
+    },
+    { foo: "notbar", otherbar: "baz" }
+  );
+});
+
+test('hook.wrap("test", wrapMethod) argument options', async () => {
+  const hook = new Hook.Collection();
+
+  hook.wrap("test", (method, options) => {
+    return method({ ...options, foo: "bar" });
+  });
+  hook.wrap("test", (method, options) => {
+    return method({ ...options, baz: "ar" });
+  });
+
+  await hook(
+    "test",
+    (options) => {
+      assert(options.foo === "bar", "passes options to before hook");
+      assert(options.baz === "ar", "passes options to before hook");
+      assert(options.otherbar === "baz", "passes options to before hook");
+    },
+    { foo: "notbar", otherbar: "baz" }
+  );
+});
+
+test('hook.wrap("test", wrapMethod) argument options for multiple names', async () => {
+  const hook = new Hook.Collection();
+
+  hook.wrap("test", (method, options) => {
+    return method({ ...options, foo: "bar" });
+  });
+  hook.wrap("test", (method, options) => {
+    return method({ ...options, baz: "ar" });
+  });
+  hook.wrap("other", (method, options) => {
+    return method({ ...options, bat: "ter" });
+  });
+
+  await hook(
+    ["test", "other"],
+    (options) => {
+      assert(options.foo === "bar", "passes options to wrap hook");
+      assert(options.baz === "ar", "passes options to wrap hook");
+      assert(options.otherbar === "baz", "passes options to wrap hook");
+      assert(options.bat === "ter", "passes options to wrap hook");
     },
     { foo: "notbar", otherbar: "baz" }
   );
